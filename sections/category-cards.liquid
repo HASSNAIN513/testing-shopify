@@ -1,33 +1,68 @@
-{%- comment -%} Category Cards Section {%- endcomment -%}
+{%- comment -%} Category Cards — Two side-by-side category cards with image hover {%- endcomment -%}
 
-<section style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+<section style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;" data-reveal>
   <div class="page-width">
-    <div style="display: grid; grid-template-columns: 1fr; gap: 20px;">
+    <div class="category-cards__grid">
       {%- for block in section.blocks -%}
-        <div {{ block.shopify_attributes }} style="position: relative; overflow: hidden; aspect-ratio: 4/5;">
-          {%- if block.settings.image -%}
-            <img src="{{ block.settings.image | image_url: width: 800 }}" alt="{{ block.settings.title | escape }}" loading="lazy" style="width:100%;height:100%;object-fit:cover;">
-          {%- else -%}
-            <div style="width:100%;height:100%;background:var(--color-accent);"></div>
-          {%- endif -%}
-          <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.45),transparent);display:flex;flex-direction:column;justify-content:flex-end;padding:32px;">
-            <h3 style="font-family:var(--font-display);font-size:30px;color:#fff;">{{ block.settings.title }}</h3>
-            {%- if block.settings.subtitle != blank -%}
-              <p style="color:rgba(255,255,255,0.8);margin-top:8px;">{{ block.settings.subtitle }}</p>
+        <a href="{{ block.settings.link_url | default: '#' }}" class="category-card" {{ block.shopify_attributes }}>
+          <div class="category-card__image-wrap">
+            {%- if block.settings.image -%}
+              <img
+                src="{{ block.settings.image | image_url: width: 800 }}"
+                srcset="{{ block.settings.image | image_url: width: 400 }} 400w, {{ block.settings.image | image_url: width: 600 }} 600w, {{ block.settings.image | image_url: width: 800 }} 800w, {{ block.settings.image | image_url: width: 1000 }} 1000w"
+                sizes="(min-width: 768px) 50vw, 100vw"
+                alt="{{ block.settings.title | escape }}"
+                loading="lazy"
+                class="category-card__image"
+              >
             {%- endif -%}
-            {%- if block.settings.link_url != blank -%}
-              <a href="{{ block.settings.link_url }}" style="position:absolute;inset:0;" aria-label="{{ block.settings.title }}"></a>
-            {%- endif -%}
+            <div class="category-card__overlay"></div>
+            <div class="category-card__content">
+              <div>
+                <h3 class="category-card__title">{{ block.settings.title }}</h3>
+                {%- if block.settings.subtitle != blank -%}
+                  <p class="category-card__subtitle">{{ block.settings.subtitle }}</p>
+                {%- endif -%}
+              </div>
+              <div class="category-card__bottom">
+                {%- if block.settings.count_text != blank -%}
+                  <span class="category-card__count">{{ block.settings.count_text }}</span>
+                {%- endif -%}
+                <span class="category-card__arrow" aria-hidden="true">
+                  {% render 'icon', name: 'arrow-up-right' %}
+                </span>
+              </div>
+            </div>
           </div>
-        </div>
+        </a>
       {%- endfor -%}
     </div>
   </div>
 </section>
 
 <style>
+  .category-cards__grid { display: grid; grid-template-columns: 1fr; gap: var(--grid-gap, 20px); }
+  .category-card { display: block; position: relative; overflow: hidden; }
+  .category-card__image-wrap { position: relative; aspect-ratio: 4 / 5; overflow: hidden; }
+  .category-card__image { width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s ease-out; }
+  .category-card:hover .category-card__image { transform: scale(1.05); }
+  .category-card__overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.45), transparent 60%); pointer-events: none; }
+  .category-card__content { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-between; padding: 24px; color: var(--color-background); }
+  .category-card__title { font-family: var(--font-display); font-size: 30px; letter-spacing: -0.02em; line-height: 1; }
+  .category-card__subtitle { font-size: 14px; opacity: 0.9; margin-top: 8px; }
+  .category-card__bottom { display: flex; align-items: flex-end; justify-content: space-between; }
+  .category-card__count { font-family: var(--font-label); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; background: rgba(255,255,255,0.9); color: var(--color-foreground); padding: 6px 12px; }
+  .category-card__arrow { width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 50%; border: 1px solid rgba(255,255,255,0.6); transition: background-color 0.2s, color 0.2s, border-color 0.2s; }
+  .category-card__arrow svg { width: 20px; height: 20px; }
+  .category-card:hover .category-card__arrow { background: var(--color-primary); border-color: var(--color-primary); }
+
   @media (min-width: 768px) {
-    .page-width > div { grid-template-columns: 1fr 1fr !important; }
+    .category-cards__grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 1024px) {
+    .category-cards__grid { gap: var(--grid-gap-desktop, 28px); }
+    .category-card__title { font-size: 48px; }
+    .category-card__arrow { width: 56px; height: 56px; }
   }
 </style>
 
@@ -35,40 +70,45 @@
 {
   "name": "Category Cards",
   "tag": "section",
+  "class": "category-cards-section",
   "settings": [
     {
       "type": "range",
       "id": "padding_top",
       "label": "Padding top",
-      "min": 0,
-      "max": 150,
-      "step": 4,
-      "unit": "px",
-      "default": 48
+      "min": 0, "max": 150, "step": 4, "unit": "px",
+      "default": 80
     },
     {
       "type": "range",
       "id": "padding_bottom",
       "label": "Padding bottom",
-      "min": 0,
-      "max": 150,
-      "step": 4,
-      "unit": "px",
-      "default": 48
+      "min": 0, "max": 150, "step": 4, "unit": "px",
+      "default": 80
     }
   ],
   "blocks": [
     {
       "type": "category",
-      "name": "Category",
+      "name": "Category Card",
       "settings": [
         { "type": "image_picker", "id": "image", "label": "Image" },
         { "type": "text", "id": "title", "label": "Title", "default": "Hair Extensions" },
-        { "type": "text", "id": "subtitle", "label": "Subtitle", "default": "Premium quality" },
+        { "type": "text", "id": "subtitle", "label": "Subtitle", "default": "Premium clip-ins & bundles" },
+        { "type": "text", "id": "count_text", "label": "Count text", "default": "24 products" },
         { "type": "url", "id": "link_url", "label": "Link" }
       ]
     }
   ],
-  "max_blocks": 4
+  "max_blocks": 4,
+  "presets": [
+    {
+      "name": "Category Cards",
+      "blocks": [
+        { "type": "category", "settings": { "title": "Hair Extensions", "subtitle": "Premium clip-ins & bundles", "count_text": "24 products" } },
+        { "type": "category", "settings": { "title": "Lip Kits", "subtitle": "Luxe matte & gloss sets", "count_text": "18 products" } }
+      ]
+    }
+  ]
 }
 {% endschema %}

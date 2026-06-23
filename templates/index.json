@@ -1,0 +1,26 @@
+{
+  "sections": {
+    "hero": { "type": "hero", "settings": {} },
+    "category-cards": { "type": "category-cards", "settings": {} },
+    "best-sellers": { "type": "best-sellers", "settings": {} },
+    "why-choose-us": { "type": "why-choose-us", "settings": {} },
+    "editorial-banner": { "type": "editorial-banner", "settings": {} },
+    "reviews-testimonials": { "type": "reviews-testimonials", "settings": {} },
+    "about-brand": { "type": "about-brand", "settings": {} },
+    "instagram-grid": { "type": "instagram-grid", "settings": {} },
+    "faq": { "type": "faq", "settings": {} },
+    "final-cta": { "type": "final-cta", "settings": {} }
+  },
+  "order": [
+    "hero",
+    "category-cards",
+    "best-sellers",
+    "why-choose-us",
+    "editorial-banner",
+    "reviews-testimonials",
+    "about-brand",
+    "instagram-grid",
+    "faq",
+    "final-cta"
+  ]
+}

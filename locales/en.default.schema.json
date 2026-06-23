@@ -1,43 +1,15 @@
 {
-  "sections": {
-    "announcement-bar": {
-      "name": "Announcement Bar"
-    },
-    "header": {
-      "name": "Header"
-    },
-    "hero": {
-      "name": "Hero"
-    },
-    "category-cards": {
-      "name": "Category Cards"
-    },
-    "best-sellers": {
-      "name": "Best Sellers"
-    },
-    "why-choose-us": {
-      "name": "Why Choose Us"
-    },
-    "editorial-banner": {
-      "name": "Editorial Banner"
-    },
-    "reviews-testimonials": {
-      "name": "Reviews"
-    },
-    "about-brand": {
-      "name": "About Brand"
-    },
-    "instagram-grid": {
-      "name": "Instagram Grid"
-    },
-    "faq": {
-      "name": "FAQ"
-    },
-    "final-cta": {
-      "name": "Newsletter CTA"
-    },
-    "footer": {
-      "name": "Footer"
-    }
-  }
+  "t:sections.announcement-bar.name": "Announcement Bar",
+  "t:sections.header.name": "Header",
+  "t:sections.hero.name": "Hero",
+  "t:sections.category-cards.name": "Category Cards",
+  "t:sections.best-sellers.name": "Best Sellers",
+  "t:sections.why-choose-us.name": "Why Choose Us",
+  "t:sections.editorial-banner.name": "Editorial Banner",
+  "t:sections.reviews-testimonials.name": "Reviews",
+  "t:sections.about-brand.name": "About Brand",
+  "t:sections.instagram-grid.name": "Instagram Grid",
+  "t:sections.faq.name": "FAQ",
+  "t:sections.final-cta.name": "Newsletter CTA",
+  "t:sections.footer.name": "Footer"
 }

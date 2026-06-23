@@ -1,24 +1,27 @@
-{%- comment -%} Why Choose Us Section {%- endcomment -%}
+{%- comment -%} Why Choose Us — 4 feature icons on blush background {%- endcomment -%}
 
-<section style="background:var(--color-blush);padding-top:{{ section.settings.padding_top }}px;padding-bottom:{{ section.settings.padding_bottom }}px;">
+<section style="background-color: {{ section.settings.bg_color }}; padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;" data-reveal>
   <div class="page-width">
-    {%- if section.settings.eyebrow != blank -%}
-      <p class="eyebrow" style="text-align:center;">{{ section.settings.eyebrow }}</p>
-    {%- endif -%}
-    <h2 class="heading-lg" style="text-align:center;margin-bottom:48px;">
-      {{ section.settings.heading }}
-      {%- if section.settings.heading_accent != blank -%}
-        <em class="heading-accent">{{ section.settings.heading_accent }}</em>
+    <div style="text-align: center; margin-bottom: 40px;">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="eyebrow">{{ section.settings.eyebrow }}</p>
       {%- endif -%}
-    </h2>
-    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:32px;">
+      <h2 class="heading-lg">
+        {{ section.settings.heading }}
+        {%- if section.settings.heading_accent != blank -%}
+          <em class="heading-accent">{{ section.settings.heading_accent }}</em>
+        {%- endif -%}
+      </h2>
+    </div>
+
+    <div class="why-choose__grid" data-reveal-stagger>
       {%- for block in section.blocks -%}
-        <div {{ block.shopify_attributes }} style="text-align:center;">
-          <div style="width:56px;height:56px;border-radius:50%;background:var(--color-background);margin:0 auto 16px;display:flex;align-items:center;justify-content:center;">
-            <span style="font-size:24px;color:var(--color-primary);">&#10024;</span>
+        <div class="why-choose__item" {{ block.shopify_attributes }}>
+          <div class="why-choose__icon-circle">
+            <span class="why-choose__icon">{% render 'icon', name: block.settings.icon %}</span>
           </div>
-          <h3 style="font-family:var(--font-display);font-size:20px;">{{ block.settings.title }}</h3>
-          <p style="color:var(--color-muted-foreground);margin-top:8px;font-size:14px;line-height:1.6;">{{ block.settings.description }}</p>
+          <h3 class="why-choose__title">{{ block.settings.title }}</h3>
+          <p class="why-choose__desc text-body-sm text-muted">{{ block.settings.description }}</p>
         </div>
       {%- endfor -%}
     </div>
@@ -26,8 +29,13 @@
 </section>
 
 <style>
+  .why-choose__grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; text-align: center; }
+  .why-choose__icon-circle { width: 56px; height: 56px; border-radius: 50%; background: var(--color-background); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
+  .why-choose__icon { color: var(--color-primary); }
+  .why-choose__icon svg { width: 24px; height: 24px; }
+  .why-choose__title { font-family: var(--font-display); font-size: 20px; letter-spacing: -0.01em; margin-bottom: 8px; }
   @media (min-width: 1024px) {
-    section[style*="color-blush"] .page-width > div[style*="grid"] { grid-template-columns: repeat(4, 1fr) !important; gap: 48px; }
+    .why-choose__grid { grid-template-columns: repeat(4, 1fr); gap: 48px; }
   }
 </style>
 
@@ -35,10 +43,12 @@
 {
   "name": "Why Choose Us",
   "tag": "section",
+  "class": "why-choose-section",
   "settings": [
-    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The Iymnn Difference" },
-    { "type": "text", "id": "heading", "label": "Heading", "default": "Why Choose" },
-    { "type": "text", "id": "heading_accent", "label": "Heading accent", "default": "Us" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The IYMNN BEAUTY Difference" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Why Women" },
+    { "type": "text", "id": "heading_accent", "label": "Heading accent (italic)", "default": "Love Us" },
+    { "type": "color", "id": "bg_color", "label": "Background color", "default": "#FBF0ED" },
     { "type": "range", "id": "padding_top", "label": "Padding top", "min": 0, "max": 150, "step": 4, "unit": "px", "default": 80 },
     { "type": "range", "id": "padding_bottom", "label": "Padding bottom", "min": 0, "max": 150, "step": 4, "unit": "px", "default": 80 }
   ],
@@ -47,11 +57,32 @@
       "type": "feature",
       "name": "Feature",
       "settings": [
-        { "type": "text", "id": "title", "label": "Title", "default": "Clean Beauty" },
+        { "type": "select", "id": "icon", "label": "Icon", "options": [
+          { "value": "sparkles", "label": "Sparkles" },
+          { "value": "leaf", "label": "Leaf / Natural" },
+          { "value": "truck", "label": "Truck / Shipping" },
+          { "value": "shield-check", "label": "Shield / Guarantee" },
+          { "value": "heart", "label": "Heart" },
+          { "value": "star", "label": "Star" },
+          { "value": "check", "label": "Checkmark" },
+          { "value": "eye", "label": "Eye" }
+        ], "default": "sparkles" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Premium Quality" },
         { "type": "text", "id": "description", "label": "Description", "default": "Ethically sourced, salon-grade beauty essentials." }
       ]
     }
   ],
-  "max_blocks": 6
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "Why Choose Us",
+      "blocks": [
+        { "type": "feature", "settings": { "icon": "sparkles", "title": "Premium Quality", "description": "Ethically sourced, salon-grade beauty essentials." } },
+        { "type": "feature", "settings": { "icon": "leaf", "title": "Clean Beauty", "description": "Formulated without parabens, sulfates, or harsh chemicals." } },
+        { "type": "feature", "settings": { "icon": "truck", "title": "Free Shipping", "description": "Complimentary shipping on all orders over $75." } },
+        { "type": "feature", "settings": { "icon": "shield-check", "title": "Satisfaction Guarantee", "description": "Love it or your money back — no questions asked." } }
+      ]
+    }
+  ]
 }
 {% endschema %}

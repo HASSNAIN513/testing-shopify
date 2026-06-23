@@ -1,11 +1,13 @@
-{%- comment -%} Hero Section {%- endcomment -%}
+{%- comment -%} Hero Section — Full homepage hero with 2-column layout {%- endcomment -%}
 
 <section
   class="hero-section"
   style="background-color: {{ section.settings.bg_color }}; padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;"
+  data-reveal
 >
   <div class="page-width">
     <div class="hero__grid">
+      {%- comment -%} Left Column: Image {%- endcomment -%}
       <div class="hero__image-col">
         <div class="hero__image-wrap">
           {%- if section.settings.image -%}
@@ -15,22 +17,24 @@
                 {{ section.settings.image | image_url: width: 400 }} 400w,
                 {{ section.settings.image | image_url: width: 600 }} 600w,
                 {{ section.settings.image | image_url: width: 800 }} 800w,
+                {{ section.settings.image | image_url: width: 1000 }} 1000w,
                 {{ section.settings.image | image_url: width: 1200 }} 1200w
               "
               sizes="(min-width: 1024px) 50vw, 100vw"
               alt="{{ section.settings.image.alt | default: section.settings.heading | escape }}"
               loading="eager"
+              fetchpriority="high"
               class="hero__image"
             >
-          {%- else -%}
-            <div class="hero__image-placeholder" style="aspect-ratio: 4/5; background: var(--color-accent);"></div>
           {%- endif -%}
+          {%- comment -%} Decorative Letter {%- endcomment -%}
           {%- if section.settings.decorative_letter != blank -%}
             <span class="hero__decorative-letter" aria-hidden="true">{{ section.settings.decorative_letter }}</span>
           {%- endif -%}
         </div>
       </div>
 
+      {%- comment -%} Right Column: Content {%- endcomment -%}
       <div class="hero__content-col">
         <div class="hero__content">
           {%- if section.settings.eyebrow != blank -%}
@@ -50,19 +54,32 @@
             </div>
           {%- endif -%}
 
+          {%- comment -%} CTA Buttons {%- endcomment -%}
           <div class="hero__actions" style="display: flex; gap: 12px; margin-top: 32px; flex-wrap: wrap;">
             {%- if section.settings.cta1_label != blank -%}
-              <a href="{{ section.settings.cta1_url | default: '#' }}" class="btn btn--primary">
-                {{ section.settings.cta1_label }}
-              </a>
+              {% render 'button', label: section.settings.cta1_label, url: section.settings.cta1_url, style: 'primary', icon: 'arrow' %}
             {%- endif -%}
             {%- if section.settings.cta2_label != blank -%}
-              <a href="{{ section.settings.cta2_url | default: '#' }}" class="btn btn--outline">
-                {{ section.settings.cta2_label }}
-              </a>
+              {% render 'button', label: section.settings.cta2_label, url: section.settings.cta2_url, style: 'outline', icon: 'arrow' %}
             {%- endif -%}
           </div>
 
+          {%- comment -%} Featured Product Overlay {%- endcomment -%}
+          {%- if section.settings.featured_product != blank -%}
+            {%- assign fp = section.settings.featured_product -%}
+            <div class="hero__featured-product">
+              {%- if fp.featured_image -%}
+                <img src="{{ fp.featured_image | image_url: width: 100 }}" alt="{{ fp.title | escape }}" loading="eager" class="hero__featured-image">
+              {%- endif -%}
+              <div class="hero__featured-info">
+                <p class="hero__featured-label font-label" style="font-size: 9px; color: var(--color-muted-foreground);">{{ 'products.featured' | t | default: 'Featured' }}</p>
+                <p style="font-family: var(--font-display); font-size: 14px;">{{ fp.title }}</p>
+                <p style="font-family: var(--font-display); font-size: 14px; color: var(--color-primary);">{{ fp.price | money }}</p>
+              </div>
+            </div>
+          {%- endif -%}
+
+          {%- comment -%} Stats Bar {%- endcomment -%}
           {%- if section.blocks.size > 0 -%}
             <div class="hero__stats" style="display: flex; gap: 32px; margin-top: 40px; padding-top: 32px; border-top: 1px solid var(--color-border);">
               {%- for block in section.blocks -%}
@@ -106,6 +123,7 @@
     opacity: 0.2;
     line-height: 1;
     pointer-events: none;
+    user-select: none;
   }
   .hero__content {
     display: flex;
@@ -113,6 +131,23 @@
     justify-content: center;
     height: 100%;
   }
+  .hero__featured-product {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    padding: 12px 16px;
+    margin-top: 32px;
+    max-width: fit-content;
+  }
+  .hero__featured-image {
+    width: 48px;
+    height: 60px;
+    object-fit: cover;
+  }
+
   @media (min-width: 1024px) {
     .hero__grid {
       grid-template-columns: 1.05fr 1fr;
@@ -139,7 +174,8 @@
       "type": "text",
       "id": "decorative_letter",
       "label": "Decorative letter",
-      "default": "I"
+      "default": "G",
+      "info": "Large watermark letter overlaying the image"
     },
     {
       "type": "text",
@@ -157,7 +193,8 @@
       "type": "text",
       "id": "heading_accent",
       "label": "Heading accent (italic)",
-      "default": "Redefined."
+      "default": "Redefined.",
+      "info": "Displayed in italic serif font in brand color"
     },
     {
       "type": "richtext",
@@ -186,6 +223,11 @@
       "type": "url",
       "id": "cta2_url",
       "label": "Secondary button link"
+    },
+    {
+      "type": "product",
+      "id": "featured_product",
+      "label": "Featured product"
     },
     {
       "type": "color",
@@ -234,6 +276,16 @@
       ]
     }
   ],
-  "max_blocks": 4
+  "max_blocks": 4,
+  "presets": [
+    {
+      "name": "Hero",
+      "blocks": [
+        { "type": "stat", "settings": { "value": "200k+", "label": "Happy customers" } },
+        { "type": "stat", "settings": { "value": "4.9★", "label": "Average rating" } },
+        { "type": "stat", "settings": { "value": "100%", "label": "Clean beauty" } }
+      ]
+    }
+  ]
 }
 {% endschema %}

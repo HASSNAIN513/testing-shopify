@@ -3,7 +3,9 @@
     "name": "theme_info",
     "theme_name": "IYMNN BEAUTY",
     "theme_version": "1.0.0",
-    "theme_author": "IYMMN"
+    "theme_author": "IYMMN",
+    "theme_documentation_url": "",
+    "theme_support_url": ""
   },
   {
     "name": "Colors",
