@@ -1,0 +1,493 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "IYMNN BEAUTY",
+    "theme_version": "1.0.0",
+    "theme_author": "IYMMN"
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Primary Colors"
+      },
+      {
+        "type": "color",
+        "id": "color_primary",
+        "label": "Primary (Accent)",
+        "default": "#C84B6A",
+        "info": "Rose pink — used for CTAs, links, stars, accent elements"
+      },
+      {
+        "type": "color",
+        "id": "color_primary_foreground",
+        "label": "Primary Foreground",
+        "default": "#FFFFFF",
+        "info": "Text on primary background"
+      },
+      {
+        "type": "color",
+        "id": "color_background",
+        "label": "Background",
+        "default": "#FFFFFF"
+      },
+      {
+        "type": "color",
+        "id": "color_foreground",
+        "label": "Foreground (Text)",
+        "default": "#1A1714",
+        "info": "Primary text color — warm dark brown/black"
+      },
+      {
+        "type": "header",
+        "content": "Surface Colors"
+      },
+      {
+        "type": "color",
+        "id": "color_secondary",
+        "label": "Secondary Background",
+        "default": "#FAF5F3"
+      },
+      {
+        "type": "color",
+        "id": "color_muted",
+        "label": "Muted Background",
+        "default": "#F9F5F3"
+      },
+      {
+        "type": "color",
+        "id": "color_muted_foreground",
+        "label": "Muted Text",
+        "default": "#6B5E57",
+        "info": "Subtle/secondary text color"
+      },
+      {
+        "type": "color",
+        "id": "color_accent",
+        "label": "Accent Background",
+        "default": "#F5E8E6",
+        "info": "Light pink for editorial cards, accent areas"
+      },
+      {
+        "type": "color",
+        "id": "color_blush",
+        "label": "Blush Background",
+        "default": "#FBF0ED",
+        "info": "Warm blush for Hero, Why Choose Us, Instagram sections"
+      },
+      {
+        "type": "color",
+        "id": "color_champagne",
+        "label": "Champagne Accent",
+        "default": "#D8C8A0",
+        "info": "Warm gold accent"
+      },
+      {
+        "type": "color",
+        "id": "color_ink",
+        "label": "Ink (Dark Background)",
+        "default": "#1C1816",
+        "info": "Near-black for footer"
+      },
+      {
+        "type": "color",
+        "id": "color_rose",
+        "label": "Rose Accent",
+        "default": "#E8A8B0",
+        "info": "Medium pink for dividers"
+      },
+      {
+        "type": "header",
+        "content": "UI Colors"
+      },
+      {
+        "type": "color",
+        "id": "color_border",
+        "label": "Border",
+        "default": "#EDE1DE"
+      },
+      {
+        "type": "color",
+        "id": "color_destructive",
+        "label": "Error / Destructive",
+        "default": "#DC2626"
+      },
+      {
+        "type": "color",
+        "id": "color_sale_badge",
+        "label": "Sale Badge",
+        "default": "#C84B6A"
+      },
+      {
+        "type": "color",
+        "id": "color_sold_out_badge",
+        "label": "Sold Out Badge",
+        "default": "#6B5E57"
+      }
+    ]
+  },
+  {
+    "name": "Typography",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Heading Font"
+      },
+      {
+        "type": "font_picker",
+        "id": "type_header_font",
+        "label": "Heading Font",
+        "default": "playfair_display_n4",
+        "info": "Used for headings, prices, logo, product names"
+      },
+      {
+        "type": "select",
+        "id": "heading_text_transform",
+        "label": "Heading Text Transform",
+        "options": [
+          { "value": "none", "label": "None" },
+          { "value": "uppercase", "label": "Uppercase" },
+          { "value": "capitalize", "label": "Capitalize" }
+        ],
+        "default": "none"
+      },
+      {
+        "type": "range",
+        "id": "heading_letter_spacing",
+        "label": "Heading Letter Spacing",
+        "min": -5,
+        "max": 5,
+        "step": 1,
+        "unit": "%",
+        "default": -2,
+        "info": "Default is -0.02em for editorial style"
+      },
+      {
+        "type": "header",
+        "content": "Body Font"
+      },
+      {
+        "type": "font_picker",
+        "id": "type_body_font",
+        "label": "Body Font",
+        "default": "inter_n4",
+        "info": "Used for body text, paragraphs"
+      },
+      {
+        "type": "range",
+        "id": "type_body_size",
+        "label": "Base Font Size",
+        "min": 14,
+        "max": 20,
+        "step": 1,
+        "unit": "px",
+        "default": 16
+      },
+      {
+        "type": "header",
+        "content": "Label Font"
+      },
+      {
+        "type": "select",
+        "id": "label_text_transform",
+        "label": "Label Text Transform",
+        "options": [
+          { "value": "none", "label": "None" },
+          { "value": "uppercase", "label": "Uppercase" }
+        ],
+        "default": "uppercase"
+      },
+      {
+        "type": "range",
+        "id": "label_letter_spacing",
+        "label": "Label Letter Spacing",
+        "min": 0,
+        "max": 30,
+        "step": 1,
+        "unit": "%",
+        "default": 18,
+        "info": "Default is 0.18em for Montserrat labels"
+      }
+    ]
+  },
+  {
+    "name": "Buttons",
+    "settings": [
+      {
+        "type": "range",
+        "id": "button_border_radius",
+        "label": "Button Border Radius",
+        "min": 0,
+        "max": 50,
+        "step": 1,
+        "unit": "px",
+        "default": 0,
+        "info": "0 = sharp corners (brand default), 50 = pill shape"
+      },
+      {
+        "type": "select",
+        "id": "button_text_transform",
+        "label": "Button Text Transform",
+        "options": [
+          { "value": "none", "label": "None" },
+          { "value": "uppercase", "label": "Uppercase" }
+        ],
+        "default": "uppercase"
+      },
+      {
+        "type": "range",
+        "id": "button_padding_horizontal",
+        "label": "Button Horizontal Padding",
+        "min": 16,
+        "max": 48,
+        "step": 4,
+        "unit": "px",
+        "default": 32
+      },
+      {
+        "type": "range",
+        "id": "button_padding_vertical",
+        "label": "Button Vertical Padding",
+        "min": 8,
+        "max": 24,
+        "step": 2,
+        "unit": "px",
+        "default": 16
+      }
+    ]
+  },
+  {
+    "name": "Layout",
+    "settings": [
+      {
+        "type": "range",
+        "id": "page_max_width",
+        "label": "Page Max Width",
+        "min": 1200,
+        "max": 1920,
+        "step": 20,
+        "unit": "px",
+        "default": 1440
+      },
+      {
+        "type": "range",
+        "id": "section_padding_vertical",
+        "label": "Default Section Vertical Padding",
+        "min": 20,
+        "max": 120,
+        "step": 4,
+        "unit": "px",
+        "default": 80
+      },
+      {
+        "type": "range",
+        "id": "section_padding_vertical_desktop",
+        "label": "Section Vertical Padding (Desktop)",
+        "min": 40,
+        "max": 150,
+        "step": 4,
+        "unit": "px",
+        "default": 112
+      },
+      {
+        "type": "range",
+        "id": "grid_gap",
+        "label": "Grid Gap",
+        "min": 8,
+        "max": 40,
+        "step": 4,
+        "unit": "px",
+        "default": 20
+      },
+      {
+        "type": "range",
+        "id": "grid_gap_desktop",
+        "label": "Grid Gap (Desktop)",
+        "min": 12,
+        "max": 48,
+        "step": 4,
+        "unit": "px",
+        "default": 28
+      }
+    ]
+  },
+  {
+    "name": "Product",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "show_vendor",
+        "label": "Show Vendor",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "show_rating",
+        "label": "Show Rating",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_quick_add",
+        "label": "Enable Quick Add",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "swatch_option_name",
+        "label": "Swatch Option Name",
+        "default": "Color",
+        "info": "The product option name that triggers swatch display (e.g., Color, Shade)"
+      },
+      {
+        "type": "select",
+        "id": "swatch_style",
+        "label": "Swatch Style",
+        "options": [
+          { "value": "circle", "label": "Circle" },
+          { "value": "pill", "label": "Pill / Rectangle" },
+          { "value": "image", "label": "Image swatch" }
+        ],
+        "default": "circle"
+      },
+      {
+        "type": "range",
+        "id": "swatch_size",
+        "label": "Swatch Size",
+        "min": 24,
+        "max": 64,
+        "step": 4,
+        "unit": "px",
+        "default": 36
+      },
+      {
+        "type": "range",
+        "id": "product_card_image_ratio",
+        "label": "Product Card Image Ratio",
+        "min": 60,
+        "max": 150,
+        "step": 5,
+        "unit": "%",
+        "default": 125,
+        "info": "Height as percentage of width. 125% = 4:5 ratio"
+      }
+    ]
+  },
+  {
+    "name": "Cart",
+    "settings": [
+      {
+        "type": "select",
+        "id": "cart_type",
+        "label": "Cart Type",
+        "options": [
+          { "value": "drawer", "label": "Drawer (slide-in)" },
+          { "value": "page", "label": "Full page" }
+        ],
+        "default": "drawer"
+      },
+      {
+        "type": "range",
+        "id": "free_shipping_threshold",
+        "label": "Free Shipping Threshold",
+        "min": 0,
+        "max": 500,
+        "step": 5,
+        "unit": "$",
+        "default": 75,
+        "info": "Set to 0 to disable the free shipping progress bar"
+      },
+      {
+        "type": "text",
+        "id": "free_shipping_message",
+        "label": "Free Shipping Message",
+        "default": "You're {{ amount }} away from free shipping!"
+      },
+      {
+        "type": "text",
+        "id": "free_shipping_success",
+        "label": "Free Shipping Success Message",
+        "default": "You've unlocked free shipping!"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_order_note",
+        "label": "Show Order Note",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "show_cart_upsell",
+        "label": "Show Cart Upsell",
+        "default": true
+      },
+      {
+        "type": "collection",
+        "id": "cart_upsell_collection",
+        "label": "Cart Upsell Collection"
+      }
+    ]
+  },
+  {
+    "name": "Social Media",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Social Media Links"
+      },
+      {
+        "type": "url",
+        "id": "social_instagram",
+        "label": "Instagram URL"
+      },
+      {
+        "type": "url",
+        "id": "social_tiktok",
+        "label": "TikTok URL"
+      },
+      {
+        "type": "url",
+        "id": "social_pinterest",
+        "label": "Pinterest URL"
+      },
+      {
+        "type": "url",
+        "id": "social_facebook",
+        "label": "Facebook URL"
+      },
+      {
+        "type": "url",
+        "id": "social_youtube",
+        "label": "YouTube URL"
+      },
+      {
+        "type": "url",
+        "id": "social_twitter",
+        "label": "Twitter / X URL"
+      }
+    ]
+  },
+  {
+    "name": "SEO & Favicon",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon"
+      },
+      {
+        "type": "image_picker",
+        "id": "og_image",
+        "label": "Default Open Graph Image",
+        "info": "Shared image used when no page-specific OG image is set"
+      },
+      {
+        "type": "text",
+        "id": "meta_description",
+        "label": "Default Meta Description",
+        "default": "IYMNN BEAUTY — Premium beauty essentials crafted for the modern woman."
+      }
+    ]
+  }
+]

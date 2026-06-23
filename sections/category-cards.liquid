@@ -1,0 +1,74 @@
+{%- comment -%} Category Cards Section {%- endcomment -%}
+
+<section style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+  <div class="page-width">
+    <div style="display: grid; grid-template-columns: 1fr; gap: 20px;">
+      {%- for block in section.blocks -%}
+        <div {{ block.shopify_attributes }} style="position: relative; overflow: hidden; aspect-ratio: 4/5;">
+          {%- if block.settings.image -%}
+            <img src="{{ block.settings.image | image_url: width: 800 }}" alt="{{ block.settings.title | escape }}" loading="lazy" style="width:100%;height:100%;object-fit:cover;">
+          {%- else -%}
+            <div style="width:100%;height:100%;background:var(--color-accent);"></div>
+          {%- endif -%}
+          <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.45),transparent);display:flex;flex-direction:column;justify-content:flex-end;padding:32px;">
+            <h3 style="font-family:var(--font-display);font-size:30px;color:#fff;">{{ block.settings.title }}</h3>
+            {%- if block.settings.subtitle != blank -%}
+              <p style="color:rgba(255,255,255,0.8);margin-top:8px;">{{ block.settings.subtitle }}</p>
+            {%- endif -%}
+            {%- if block.settings.link_url != blank -%}
+              <a href="{{ block.settings.link_url }}" style="position:absolute;inset:0;" aria-label="{{ block.settings.title }}"></a>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  @media (min-width: 768px) {
+    .page-width > div { grid-template-columns: 1fr 1fr !important; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Category Cards",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 150,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 150,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Hair Extensions" },
+        { "type": "text", "id": "subtitle", "label": "Subtitle", "default": "Premium quality" },
+        { "type": "url", "id": "link_url", "label": "Link" }
+      ]
+    }
+  ],
+  "max_blocks": 4
+}
+{% endschema %}

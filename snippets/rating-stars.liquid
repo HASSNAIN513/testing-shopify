@@ -1,0 +1,30 @@
+{%- comment -%}
+  Renders star rating display with partial fill support.
+  Usage: {% render 'rating-stars', rating: 4.5, count: 128 %}
+  Accepts: rating (decimal 0-5), count (number), show_count (boolean, default true)
+{%- endcomment -%}
+
+{%- liquid
+  assign rating_value = rating | default: 0 | times: 1.0
+  assign show_count = show_count | default: true
+-%}
+
+<div class="rating-stars" role="img" aria-label="{{ rating_value }} out of 5 stars">
+  {%- for i in (1..5) -%}
+    {%- if rating_value >= i -%}
+      <span class="rating-stars__star">{% render 'icon', name: 'star' %}</span>
+    {%- elsif rating_value > i | minus: 1 -%}
+      <span class="rating-stars__star rating-stars__star--partial">
+        <span style="position: relative; display: inline-block; width: 16px; height: 16px;">
+          <span style="position: absolute; inset: 0; overflow: hidden; width: {{ rating_value | minus: i | plus: 1 | times: 100 }}%;">{% render 'icon', name: 'star' %}</span>
+          <span style="position: absolute; inset: 0;">{% render 'icon', name: 'star-empty' %}</span>
+        </span>
+      </span>
+    {%- else -%}
+      <span class="rating-stars__star rating-stars__star--empty">{% render 'icon', name: 'star-empty' %}</span>
+    {%- endif -%}
+  {%- endfor -%}
+  {%- if show_count and count -%}
+    <span class="rating-stars__count">({{ count }})</span>
+  {%- endif -%}
+</div>

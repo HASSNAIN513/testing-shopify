@@ -1,0 +1,38 @@
+{%- comment -%} Collection Banner — Full-width hero with overlay {%- endcomment -%}
+
+<section class="collection-banner" data-reveal>
+  {%- assign banner_image = section.settings.image | default: collection.image -%}
+  {%- if banner_image -%}
+    <img
+      src="{{ banner_image | image_url: width: 1600 }}"
+      srcset="{{ banner_image | image_url: width: 800 }} 800w, {{ banner_image | image_url: width: 1200 }} 1200w, {{ banner_image | image_url: width: 1600 }} 1600w"
+      sizes="100vw"
+      alt="{{ collection.title | escape }}"
+      loading="eager"
+      class="collection-banner__image"
+    >
+  {%- endif -%}
+  <div class="collection-banner__overlay" style="background: linear-gradient(to top, {{ section.settings.overlay_color | default: 'rgba(0,0,0,0.5)' }}, transparent);">
+    <div class="page-width" style="width: 100%;">
+      {% render 'breadcrumb' %}
+      <h1 class="collection-banner__title">{{ collection.title }}</h1>
+      {%- if collection.description != blank -%}
+        <p class="collection-banner__description">{{ collection.description }}</p>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Collection Banner",
+  "tag": "section",
+  "class": "collection-banner-section",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Banner image", "info": "Falls back to collection image" },
+    { "type": "text", "id": "overlay_color", "label": "Overlay color", "default": "rgba(0,0,0,0.5)" },
+    { "type": "color", "id": "text_color", "label": "Text color", "default": "#FFFFFF" }
+  ],
+  "presets": [{ "name": "Collection Banner" }]
+}
+{% endschema %}

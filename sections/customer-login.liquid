@@ -1,0 +1,30 @@
+{%- comment -%} Customer Login {%- endcomment -%}
+
+<section class="customer-page">
+  <h1 class="customer-page__title">{{ 'customer.sign_in' | t | default: 'Sign In' }}</h1>
+  <p class="customer-page__subtitle">{{ 'customer.sign_in_subtitle' | t | default: 'Welcome back! Sign in to your account.' }}</p>
+
+  {% form 'customer_login' %}
+    {%- if form.errors -%}
+      <div class="form-error" role="alert" style="margin-bottom: 20px;">{{ form.errors | default_errors }}</div>
+    {%- endif -%}
+    <div class="customer-page__form">
+      <div class="form-group">
+        <label class="form-label" for="login-email">{{ 'customer.email' | t | default: 'Email' }}</label>
+        <input type="email" id="login-email" name="customer[email]" class="form-input" autocomplete="email" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="login-password">{{ 'customer.password' | t | default: 'Password' }}</label>
+        <input type="password" id="login-password" name="customer[password]" class="form-input" autocomplete="current-password" required>
+      </div>
+      <button type="submit" class="btn btn--primary btn--full">{{ 'customer.sign_in' | t | default: 'Sign In' }}</button>
+    </div>
+  {% endform %}
+
+  <p class="customer-page__link"><a href="{{ routes.account_recover_url }}">{{ 'customer.forgot_password' | t | default: 'Forgot your password?' }}</a></p>
+  <p class="customer-page__link">{{ 'customer.no_account' | t | default: "Don't have an account?" }} <a href="{{ routes.account_register_url }}">{{ 'customer.create_account' | t | default: 'Create one' }}</a></p>
+</section>
+
+{% schema %}
+{ "name": "Customer Login", "tag": "section", "settings": [], "presets": [{ "name": "Customer Login" }] }
+{% endschema %}

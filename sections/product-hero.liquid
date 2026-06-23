@@ -1,0 +1,182 @@
+{%- comment -%} Product Hero — Split layout with gallery and sticky details {%- endcomment -%}
+
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+
+<section style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+  <div class="page-width">
+    {% render 'breadcrumb' %}
+
+    <div class="product-hero" data-product-hero>
+      {%- comment -%} Gallery {%- endcomment -%}
+      <div class="product-hero__gallery" data-product-gallery>
+        <div class="product-hero__main-image-wrap" style="position: relative; overflow: hidden;">
+          <img
+            src="{{ current_variant.featured_image | default: product.featured_image | image_url: width: 800 }}"
+            srcset="{{ current_variant.featured_image | default: product.featured_image | image_url: width: 400 }} 400w, {{ current_variant.featured_image | default: product.featured_image | image_url: width: 600 }} 600w, {{ current_variant.featured_image | default: product.featured_image | image_url: width: 800 }} 800w, {{ current_variant.featured_image | default: product.featured_image | image_url: width: 1200 }} 1200w"
+            sizes="(min-width: 1024px) 50vw, 100vw"
+            alt="{{ product.featured_image.alt | default: product.title | escape }}"
+            loading="eager"
+            class="product-hero__main-image"
+            data-product-main-image
+          >
+        </div>
+        {%- if product.images.size > 1 -%}
+          <div class="product-hero__thumbnails" data-product-thumbnails>
+            {%- for image in product.images -%}
+              <img
+                src="{{ image | image_url: width: 120 }}"
+                alt="{{ image.alt | default: product.title | escape }}"
+                loading="lazy"
+                class="product-hero__thumbnail{% if forloop.first %} is-active{% endif %}"
+                data-thumbnail
+                data-image-id="{{ image.id }}"
+                data-full-src="{{ image | image_url: width: 800 }}"
+                data-srcset="{{ image | image_url: width: 400 }} 400w, {{ image | image_url: width: 600 }} 600w, {{ image | image_url: width: 800 }} 800w, {{ image | image_url: width: 1200 }} 1200w"
+              >
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
+
+      {%- comment -%} Product Details {%- endcomment -%}
+      <div class="product-hero__details" data-product-details>
+        {%- if section.settings.show_vendor and product.vendor != blank -%}
+          <p class="product-hero__brand">{{ product.vendor }}</p>
+        {%- endif -%}
+
+        <h1 class="product-hero__title">{{ product.title }}</h1>
+
+        {%- if section.settings.show_rating -%}
+          <div class="product-hero__rating">
+            {% render 'rating-stars', rating: 4.8, count: 124 %}
+          </div>
+        {%- endif -%}
+
+        <div class="product-hero__price" data-product-price>
+          {% render 'price', product: product %}
+        </div>
+
+        {%- comment -%} Product Form {%- endcomment -%}
+        {% form 'product', product, data-product-form: '', data-product-id: product.id %}
+          <input type="hidden" name="id" value="{{ current_variant.id }}" data-variant-id>
+
+          {%- comment -%} Swatch Selector {%- endcomment -%}
+          {% render 'swatch-selector', product: product %}
+
+          {%- comment -%} Non-color options {%- endcomment -%}
+          {%- assign swatch_option = settings.swatch_option_name | default: 'Color' -%}
+          {%- for option in product.options_with_values -%}
+            {%- unless option.name == swatch_option -%}
+              <div class="form-group">
+                <label class="form-label" for="option-{{ option.position }}">{{ option.name }}</label>
+                <select id="option-{{ option.position }}" class="form-select" data-option-select data-option-index="{{ option.position | minus: 1 }}">
+                  {%- for value in option.values -%}
+                    <option value="{{ value | escape }}" {% if option.selected_value == value %}selected{% endif %}>{{ value }}</option>
+                  {%- endfor -%}
+                </select>
+              </div>
+            {%- endunless -%}
+          {%- endfor -%}
+
+          {%- comment -%} Quantity {%- endcomment -%}
+          <div style="margin: 20px 0;">
+            <label class="form-label">{{ 'products.quantity' | t | default: 'Quantity' }}</label>
+            {% render 'quantity-input', value: 1, min: 1, max: current_variant.inventory_quantity, id_prefix: 'product-quantity' %}
+          </div>
+
+          {%- comment -%} Add to Cart & Buy Now {%- endcomment -%}
+          <div class="product-hero__actions">
+            <button type="submit" class="btn btn--primary btn--full" data-add-to-cart {% unless current_variant.available %}disabled{% endunless %}>
+              {%- if current_variant.available -%}
+                {{ 'products.add_to_cart' | t | default: 'Add to Cart' }}
+              {%- else -%}
+                {{ 'products.sold_out' | t | default: 'Sold Out' }}
+              {%- endif -%}
+            </button>
+            {%- if section.settings.show_buy_now -%}
+              <button type="submit" name="checkout" class="btn btn--secondary btn--full" {% unless current_variant.available %}disabled{% endunless %}>
+                {{ 'products.buy_now' | t | default: 'Buy Now' }}
+              </button>
+            {%- endif -%}
+          </div>
+        {% endform %}
+
+        {%- comment -%} Trust Badges {%- endcomment -%}
+        {%- if section.settings.show_trust_badges -%}
+          <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--color-border);">
+            {% render 'trust-badges' %}
+          </div>
+        {%- endif -%}
+
+        {%- comment -%} Description Accordion {%- endcomment -%}
+        <div class="accordion" style="margin-top: 24px;" data-accordion>
+          {%- if product.description != blank -%}
+            <div class="accordion__item is-open" data-accordion-item>
+              <button type="button" class="accordion__trigger" data-accordion-trigger aria-expanded="true">
+                <span>{{ 'products.description' | t | default: 'Description' }}</span>
+                <span class="accordion__trigger-icon">{% render 'icon', name: 'chevron-down' %}</span>
+              </button>
+              <div class="accordion__content" style="max-height: 1000px;">
+                <div class="accordion__body">{{ product.description }}</div>
+              </div>
+            </div>
+          {%- endif -%}
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'accordion_tab' -%}
+              <div class="accordion__item" data-accordion-item {{ block.shopify_attributes }}>
+                <button type="button" class="accordion__trigger" data-accordion-trigger aria-expanded="false">
+                  <span>{{ block.settings.heading }}</span>
+                  <span class="accordion__trigger-icon">{% render 'icon', name: 'chevron-down' %}</span>
+                </button>
+                <div class="accordion__content">
+                  <div class="accordion__body">{{ block.settings.content }}</div>
+                </div>
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {%- comment -%} Product JSON for JS variant switching {%- endcomment -%}
+  <script type="application/json" data-product-json>
+    {{ product | json }}
+  </script>
+</section>
+
+{% schema %}
+{
+  "name": "Product Hero",
+  "tag": "section",
+  "class": "product-hero-section",
+  "settings": [
+    { "type": "checkbox", "id": "show_vendor", "label": "Show vendor", "default": true },
+    { "type": "checkbox", "id": "show_rating", "label": "Show rating", "default": true },
+    { "type": "checkbox", "id": "show_buy_now", "label": "Show Buy Now button", "default": true },
+    { "type": "checkbox", "id": "show_trust_badges", "label": "Show trust badges", "default": true },
+    { "type": "range", "id": "padding_top", "label": "Padding top", "min": 0, "max": 150, "step": 4, "unit": "px", "default": 40 },
+    { "type": "range", "id": "padding_bottom", "label": "Padding bottom", "min": 0, "max": 150, "step": 4, "unit": "px", "default": 80 }
+  ],
+  "blocks": [
+    {
+      "type": "accordion_tab",
+      "name": "Accordion Tab",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Ingredients" },
+        { "type": "richtext", "id": "content", "label": "Content", "default": "<p>Details about the ingredients used in this product.</p>" }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "Product Hero",
+      "blocks": [
+        { "type": "accordion_tab", "settings": { "heading": "Ingredients", "content": "<p>Premium quality ingredients carefully selected for effectiveness and safety.</p>" } },
+        { "type": "accordion_tab", "settings": { "heading": "How to Use", "content": "<p>Step-by-step application guide for best results.</p>" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

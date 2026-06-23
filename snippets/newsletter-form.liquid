@@ -1,0 +1,43 @@
+{%- comment -%}
+  Renders newsletter signup form.
+  Usage: {% render 'newsletter-form', inverted: true, placeholder_text: 'Your email', button_text: 'Subscribe' %}
+{%- endcomment -%}
+
+{%- liquid
+  assign form_class = 'newsletter-form'
+  if inverted
+    assign form_class = form_class | append: ' newsletter-form--inverted'
+  endif
+  assign placeholder = placeholder_text | default: 'Enter your email'
+  assign btn_text = button_text | default: 'Subscribe'
+-%}
+
+{% form 'customer', id: 'newsletter-form' %}
+  <input type="hidden" name="contact[tags]" value="newsletter">
+  <div class="{{ form_class }}">
+    <input
+      type="email"
+      name="contact[email]"
+      class="newsletter-form__input"
+      placeholder="{{ placeholder }}"
+      aria-label="{{ 'newsletter.placeholder' | t | default: placeholder }}"
+      required
+      autocomplete="email"
+    >
+    <button type="submit" class="newsletter-form__submit" aria-label="{{ btn_text }}">
+      {{ btn_text }}
+    </button>
+  </div>
+
+  {%- if form.posted_successfully? -%}
+    <p class="form-success" style="margin-top: 12px; text-align: center;" role="status">
+      {{ 'newsletter.success' | t | default: 'Thank you for subscribing!' }}
+    </p>
+  {%- endif -%}
+
+  {%- if form.errors -%}
+    <p class="form-error" style="margin-top: 12px; text-align: center;" role="alert">
+      {{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}
+    </p>
+  {%- endif -%}
+{% endform %}

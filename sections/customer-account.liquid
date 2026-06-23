@@ -1,0 +1,56 @@
+{%- comment -%} Customer Account Dashboard {%- endcomment -%}
+
+<section class="account-dashboard">
+  <div class="account-dashboard__header">
+    <h1 class="account-dashboard__title">{{ 'customer.account' | t | default: 'My Account' }}</h1>
+    <a href="{{ routes.account_logout_url }}" class="btn btn--outline" style="padding: 10px 20px; font-size: 10px;">{{ 'customer.logout' | t | default: 'Sign Out' }}</a>
+  </div>
+
+  <p style="margin-bottom: 32px; color: var(--color-muted-foreground);">{{ 'customer.welcome' | t | default: 'Welcome back,' }} {{ customer.first_name }}.</p>
+
+  {%- comment -%} Order History {%- endcomment -%}
+  <h2 class="heading-sm" style="margin-bottom: 20px;">{{ 'customer.order_history' | t | default: 'Order History' }}</h2>
+  {%- if customer.orders.size > 0 -%}
+    <div style="overflow-x: auto;">
+      <table class="order-table">
+        <thead>
+          <tr>
+            <th>{{ 'customer.order_number' | t | default: 'Order' }}</th>
+            <th>{{ 'customer.date' | t | default: 'Date' }}</th>
+            <th>{{ 'customer.payment_status' | t | default: 'Payment' }}</th>
+            <th>{{ 'customer.fulfillment_status' | t | default: 'Fulfillment' }}</th>
+            <th style="text-align: right;">{{ 'customer.total' | t | default: 'Total' }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {%- for order in customer.orders -%}
+            <tr>
+              <td><a href="{{ order.customer_url }}" style="color: var(--color-primary);">{{ order.name }}</a></td>
+              <td>{{ order.created_at | date: '%B %d, %Y' }}</td>
+              <td>{{ order.financial_status_label }}</td>
+              <td>{{ order.fulfillment_status_label }}</td>
+              <td style="text-align: right; font-family: var(--font-display);">{{ order.total_price | money }}</td>
+            </tr>
+          {%- endfor -%}
+        </tbody>
+      </table>
+    </div>
+  {%- else -%}
+    <p class="text-muted">{{ 'customer.no_orders' | t | default: 'You haven\'t placed any orders yet.' }}</p>
+  {%- endif -%}
+
+  {%- comment -%} Account Details {%- endcomment -%}
+  <div style="margin-top: 48px;">
+    <h2 class="heading-sm" style="margin-bottom: 20px;">{{ 'customer.account_details' | t | default: 'Account Details' }}</h2>
+    <p>{{ customer.name }}</p>
+    <p>{{ customer.email }}</p>
+    {%- if customer.default_address -%}
+      <p style="margin-top: 12px; color: var(--color-muted-foreground);">{{ customer.default_address | format_address }}</p>
+    {%- endif -%}
+    <a href="{{ routes.account_addresses_url }}" class="btn btn--outline" style="margin-top: 16px; padding: 10px 20px; font-size: 10px;">{{ 'customer.manage_addresses' | t | default: 'Manage Addresses' }}</a>
+  </div>
+</section>
+
+{% schema %}
+{ "name": "Customer Account", "tag": "section", "settings": [], "presets": [{ "name": "Customer Account" }] }
+{% endschema %}

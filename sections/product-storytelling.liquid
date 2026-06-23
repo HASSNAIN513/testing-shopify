@@ -1,0 +1,65 @@
+{%- comment -%} Product Storytelling — Benefit icons strip {%- endcomment -%}
+
+<section style="background-color: {{ section.settings.bg_color }}; padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;" data-reveal>
+  <div class="page-width">
+    <div class="storytelling__grid" data-reveal-stagger>
+      {%- for block in section.blocks -%}
+        <div class="storytelling__item" {{ block.shopify_attributes }}>
+          <span class="storytelling__icon">{% render 'icon', name: block.settings.icon %}</span>
+          <div>
+            <p class="font-label" style="font-size: 11px; margin-bottom: 4px;">{{ block.settings.label }}</p>
+            {%- if block.settings.description != blank -%}
+              <p class="text-body-xs text-muted">{{ block.settings.description }}</p>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  .storytelling__grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+  .storytelling__item { display: flex; align-items: center; gap: 12px; }
+  .storytelling__icon { color: var(--color-primary); flex-shrink: 0; }
+  .storytelling__icon svg { width: 24px; height: 24px; }
+  @media (min-width: 768px) { .storytelling__grid { grid-template-columns: repeat(4, 1fr); } }
+</style>
+
+{% schema %}
+{
+  "name": "Product Storytelling",
+  "tag": "section",
+  "class": "storytelling-section",
+  "settings": [
+    { "type": "color", "id": "bg_color", "label": "Background color", "default": "#FAF5F3" },
+    { "type": "range", "id": "padding_top", "label": "Padding top", "min": 0, "max": 150, "step": 4, "unit": "px", "default": 40 },
+    { "type": "range", "id": "padding_bottom", "label": "Padding bottom", "min": 0, "max": 150, "step": 4, "unit": "px", "default": 40 }
+  ],
+  "blocks": [
+    {
+      "type": "benefit",
+      "name": "Benefit",
+      "settings": [
+        { "type": "select", "id": "icon", "label": "Icon", "options": [
+          { "value": "leaf", "label": "Leaf / Natural" }, { "value": "sparkles", "label": "Sparkles" }, { "value": "shield-check", "label": "Shield" }, { "value": "truck", "label": "Shipping" }, { "value": "heart", "label": "Heart" }, { "value": "star", "label": "Star" }, { "value": "check", "label": "Check" }
+        ], "default": "leaf" },
+        { "type": "text", "id": "label", "label": "Label", "default": "Clean Beauty" },
+        { "type": "text", "id": "description", "label": "Description" }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "Product Storytelling",
+      "blocks": [
+        { "type": "benefit", "settings": { "icon": "leaf", "label": "Clean Ingredients" } },
+        { "type": "benefit", "settings": { "icon": "sparkles", "label": "Salon Quality" } },
+        { "type": "benefit", "settings": { "icon": "shield-check", "label": "Dermatologist Tested" } },
+        { "type": "benefit", "settings": { "icon": "truck", "label": "Free Shipping" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,104 @@
+{%- comment -%}
+  Renders cosmetic shade swatch selector for product pages.
+  Usage: {% render 'swatch-selector', product: product %}
+  Accepts: product, option_name (default from settings)
+{%- endcomment -%}
+
+{%- liquid
+  assign swatch_option = option_name | default: settings.swatch_option_name | default: 'Color'
+  assign swatch_style = settings.swatch_style | default: 'circle'
+  assign swatch_size = settings.swatch_size | default: 36
+-%}
+
+{%- for option in product.options_with_values -%}
+  {%- if option.name == swatch_option -%}
+    <div class="swatch-selector" data-swatch-selector data-option-index="{{ option.position | minus: 1 }}">
+      <div class="swatch-selector__label">
+        {{ option.name }}: <span class="swatch-selector__label-value" data-swatch-selected-label>{{ option.selected_value | default: option.values.first }}</span>
+      </div>
+      <div class="swatch-selector__items">
+        {%- for value in option.values -%}
+          {%- liquid
+            assign variant_available = true
+            assign color_handle = value | handleize
+            for variant in product.variants
+              assign option_key = 'option' | append: option.position
+              if variant[option_key] == value
+                unless variant.available
+                  assign variant_available = false
+                endunless
+                break
+              endif
+            endfor
+          -%}
+
+          {%- if swatch_style == 'pill' -%}
+            <label
+              class="swatch-selector__item swatch-selector__item--pill{% if option.selected_value == value %} is-selected{% endif %}{% unless variant_available %} is-soldout{% endunless %}"
+              for="swatch-{{ section.id }}-{{ option.position }}-{{ forloop.index }}"
+              data-swatch-item
+              data-value="{{ value | escape }}"
+              title="{{ value }}"
+            >
+              <input
+                type="radio"
+                id="swatch-{{ section.id }}-{{ option.position }}-{{ forloop.index }}"
+                name="option-{{ option.position }}"
+                value="{{ value | escape }}"
+                class="visually-hidden"
+                {% if option.selected_value == value %}checked{% endif %}
+                data-swatch-input
+              >
+              {{ value }}
+            </label>
+          {%- else -%}
+            <label
+              class="swatch-selector__item{% if option.selected_value == value %} is-selected{% endif %}{% unless variant_available %} is-soldout{% endunless %}"
+              for="swatch-{{ section.id }}-{{ option.position }}-{{ forloop.index }}"
+              style="width: {{ swatch_size }}px; height: {{ swatch_size }}px;"
+              data-swatch-item
+              data-value="{{ value | escape }}"
+            >
+              <input
+                type="radio"
+                id="swatch-{{ section.id }}-{{ option.position }}-{{ forloop.index }}"
+                name="option-{{ option.position }}"
+                value="{{ value | escape }}"
+                class="visually-hidden"
+                {% if option.selected_value == value %}checked{% endif %}
+                data-swatch-input
+              >
+              {%- if swatch_style == 'image' -%}
+                {%- comment -%} Image swatch from variant featured image {%- endcomment -%}
+                {%- for variant in product.variants -%}
+                  {%- assign option_key = 'option' | append: option.position -%}
+                  {%- if variant[option_key] == value and variant.featured_image -%}
+                    <img
+                      src="{{ variant.featured_image | image_url: width: 72 }}"
+                      alt="{{ value | escape }}"
+                      style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;"
+                      loading="lazy"
+                    >
+                    {%- break -%}
+                  {%- endif -%}
+                {%- endfor -%}
+              {%- else -%}
+                <span class="swatch-selector__color" style="background-color: {{ value | downcase | replace: ' ', '' }};"></span>
+              {%- endif -%}
+              <span class="swatch-selector__tooltip">{{ value }}</span>
+            </label>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+
+      {%- comment -%} Notify Me for sold-out shades {%- endcomment -%}
+      <div class="swatch-selector__notify" data-swatch-notify style="display: none; margin-top: 12px;">
+        <p style="font-size: 13px; color: var(--color-muted-foreground); margin-bottom: 8px;">{{ 'products.notify_me_text' | t | default: 'This shade is currently sold out. Enter your email to be notified when it is back in stock.' }}</p>
+        <div style="display: flex; gap: 0;">
+          <input type="email" placeholder="{{ 'products.notify_email_placeholder' | t | default: 'Email address' }}" class="form-input" style="flex: 1; border-radius: 0;" data-notify-email>
+          <button type="button" class="btn btn--primary" style="white-space: nowrap;" data-notify-submit>{{ 'products.notify_me' | t | default: 'Notify Me' }}</button>
+        </div>
+      </div>
+    </div>
+  {%- endif -%}
+{%- endfor -%}

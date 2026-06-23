@@ -1,0 +1,57 @@
+{%- comment -%} Why Choose Us Section {%- endcomment -%}
+
+<section style="background:var(--color-blush);padding-top:{{ section.settings.padding_top }}px;padding-bottom:{{ section.settings.padding_bottom }}px;">
+  <div class="page-width">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="eyebrow" style="text-align:center;">{{ section.settings.eyebrow }}</p>
+    {%- endif -%}
+    <h2 class="heading-lg" style="text-align:center;margin-bottom:48px;">
+      {{ section.settings.heading }}
+      {%- if section.settings.heading_accent != blank -%}
+        <em class="heading-accent">{{ section.settings.heading_accent }}</em>
+      {%- endif -%}
+    </h2>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:32px;">
+      {%- for block in section.blocks -%}
+        <div {{ block.shopify_attributes }} style="text-align:center;">
+          <div style="width:56px;height:56px;border-radius:50%;background:var(--color-background);margin:0 auto 16px;display:flex;align-items:center;justify-content:center;">
+            <span style="font-size:24px;color:var(--color-primary);">&#10024;</span>
+          </div>
+          <h3 style="font-family:var(--font-display);font-size:20px;">{{ block.settings.title }}</h3>
+          <p style="color:var(--color-muted-foreground);margin-top:8px;font-size:14px;line-height:1.6;">{{ block.settings.description }}</p>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  @media (min-width: 1024px) {
+    section[style*="color-blush"] .page-width > div[style*="grid"] { grid-template-columns: repeat(4, 1fr) !important; gap: 48px; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Why Choose Us",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The Iymnn Difference" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Why Choose" },
+    { "type": "text", "id": "heading_accent", "label": "Heading accent", "default": "Us" },
+    { "type": "range", "id": "padding_top", "label": "Padding top", "min": 0, "max": 150, "step": 4, "unit": "px", "default": 80 },
+    { "type": "range", "id": "padding_bottom", "label": "Padding bottom", "min": 0, "max": 150, "step": 4, "unit": "px", "default": 80 }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title", "default": "Clean Beauty" },
+        { "type": "text", "id": "description", "label": "Description", "default": "Ethically sourced, salon-grade beauty essentials." }
+      ]
+    }
+  ],
+  "max_blocks": 6
+}
+{% endschema %}

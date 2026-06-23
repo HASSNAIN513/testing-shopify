@@ -1,0 +1,33 @@
+{%- comment -%}
+  Renders trust badges row.
+  Usage: {% render 'trust-badges', badges: section.blocks %}
+  Or with defaults: {% render 'trust-badges' %}
+{%- endcomment -%}
+
+<div class="trust-badges">
+  {%- if badges != blank and badges.size > 0 -%}
+    {%- for block in badges -%}
+      <div class="trust-badge" {{ block.shopify_attributes }}>
+        <span class="trust-badge__icon">{% render 'icon', name: block.settings.icon %}</span>
+        <span class="trust-badge__label">{{ block.settings.label }}</span>
+      </div>
+    {%- endfor -%}
+  {%- else -%}
+    <div class="trust-badge">
+      <span class="trust-badge__icon">{% render 'icon', name: 'leaf' %}</span>
+      <span class="trust-badge__label">{{ 'products.cruelty_free' | t | default: 'Cruelty Free' }}</span>
+    </div>
+    <div class="trust-badge">
+      <span class="trust-badge__icon">{% render 'icon', name: 'shield-check' %}</span>
+      <span class="trust-badge__label">{{ 'products.dermatologist_tested' | t | default: 'Dermatologist Tested' }}</span>
+    </div>
+    <div class="trust-badge">
+      <span class="trust-badge__icon">{% render 'icon', name: 'sparkles' %}</span>
+      <span class="trust-badge__label">{{ 'products.clean_beauty' | t | default: 'Clean Beauty' }}</span>
+    </div>
+    <div class="trust-badge">
+      <span class="trust-badge__icon">{% render 'icon', name: 'truck' %}</span>
+      <span class="trust-badge__label">{{ 'products.free_shipping' | t | default: 'Free Shipping' }}</span>
+    </div>
+  {%- endif -%}
+</div>

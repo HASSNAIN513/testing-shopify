@@ -1,0 +1,33 @@
+{%- comment -%}
+  Renders price display with sale formatting.
+  Usage: {% render 'price', product: product %}
+  Accepts: product (product object) OR price, compare_at_price
+{%- endcomment -%}
+
+{%- liquid
+  if product
+    assign current_price = product.price
+    assign compare_price = product.compare_at_price
+    assign on_sale = false
+    if compare_price > current_price
+      assign on_sale = true
+    endif
+  else
+    assign current_price = price
+    assign compare_price = compare_at_price
+    assign on_sale = false
+    if compare_price and compare_price > current_price
+      assign on_sale = true
+    endif
+  endif
+-%}
+
+<div class="price" aria-label="{{ 'products.price' | t }}">
+  {%- if on_sale -%}
+    <span class="price__regular price__sale">{{ current_price | money }}</span>
+    <span class="price__compare">{{ compare_price | money }}</span>
+    <span class="price__badge">{{ 'products.sale' | t | default: 'Sale' }}</span>
+  {%- else -%}
+    <span class="price__regular">{{ current_price | money }}</span>
+  {%- endif -%}
+</div>

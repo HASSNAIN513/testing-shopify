@@ -1,0 +1,35 @@
+{%- comment -%} Complementary Products — Complete the look {%- endcomment -%}
+
+<section style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;" data-reveal>
+  <div class="page-width">
+    <h2 class="heading-md" style="margin-bottom: 40px;">{{ section.settings.heading }}</h2>
+    <div style="overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;">
+      <div style="display: flex; gap: 20px; min-width: max-content; padding-bottom: 8px;">
+        {%- assign comp_collection = collections[section.settings.collection] -%}
+        {%- if comp_collection != blank -%}
+          {%- for item in comp_collection.products limit: section.settings.products_count -%}
+            <div style="width: 260px; flex-shrink: 0;">
+              {% render 'product-card', product: item, lazy: true %}
+            </div>
+          {%- endfor -%}
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Complementary Products",
+  "tag": "section",
+  "class": "complementary-section",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Complete the Look" },
+    { "type": "collection", "id": "collection", "label": "Collection" },
+    { "type": "range", "id": "products_count", "label": "Products to show", "min": 2, "max": 8, "step": 1, "default": 4 },
+    { "type": "range", "id": "padding_top", "label": "Padding top", "min": 0, "max": 150, "step": 4, "unit": "px", "default": 60 },
+    { "type": "range", "id": "padding_bottom", "label": "Padding bottom", "min": 0, "max": 150, "step": 4, "unit": "px", "default": 60 }
+  ],
+  "presets": [{ "name": "Complementary Products" }]
+}
+{% endschema %}

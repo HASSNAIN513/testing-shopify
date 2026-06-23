@@ -1,0 +1,6 @@
+{
+  "sections": {
+    "faq": { "type": "faq", "settings": { "heading": "Help &", "heading_accent": "FAQs" } }
+  },
+  "order": ["faq"]
+}

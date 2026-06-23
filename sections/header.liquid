@@ -1,0 +1,139 @@
+{%- comment -%} Site Header â€” Sticky navigation with mobile drawer {%- endcomment -%}
+
+<header class="site-header" data-site-header>
+  <div class="site-header__inner">
+    {%- comment -%} Left: Mobile menu toggle {%- endcomment -%}
+    <div class="site-header__left">
+      <button type="button" class="site-header__icon-btn site-header__menu-toggle" data-mobile-menu-toggle aria-label="{{ 'accessibility.menu' | t | default: 'Menu' }}" aria-expanded="false">
+        {% render 'icon', name: 'menu' %}
+      </button>
+    </div>
+
+    {%- comment -%} Center: Logo {%- endcomment -%}
+    <div class="site-header__center">
+      <a href="/" class="site-header__logo" aria-label="{{ shop.name }}">
+        {%- if section.settings.logo -%}
+          <img
+            src="{{ section.settings.logo | image_url: width: 200 }}"
+            alt="{{ shop.name }}"
+            width="{{ section.settings.logo.width }}"
+            height="{{ section.settings.logo.height }}"
+            loading="eager"
+            class="site-header__logo-image"
+          >
+        {%- else -%}
+          {{ shop.name }}
+        {%- endif -%}
+      </a>
+    </div>
+
+    {%- comment -%} Right: Icon buttons {%- endcomment -%}
+    <div class="site-header__icons">
+      <button type="button" class="site-header__icon-btn" data-search-toggle aria-label="{{ 'accessibility.search' | t | default: 'Search' }}">
+        {% render 'icon', name: 'search' %}
+      </button>
+      <a href="{{ routes.account_url }}" class="site-header__icon-btn site-header__icon--desktop" aria-label="{{ 'accessibility.account' | t | default: 'Account' }}">
+        {% render 'icon', name: 'user' %}
+      </a>
+      <button type="button" class="site-header__icon-btn site-header__icon--desktop" aria-label="{{ 'general.wishlist' | t | default: 'Wishlist' }}">
+        {% render 'icon', name: 'heart' %}
+      </button>
+      <a href="{{ routes.cart_url }}" class="site-header__icon-btn" data-cart-toggle aria-label="{{ 'accessibility.cart' | t | default: 'Cart' }}">
+        {% render 'icon', name: 'shopping-bag' %}
+        <span class="site-header__cart-count" data-cart-count aria-hidden="true">{{ cart.item_count }}</span>
+      </a>
+    </div>
+  </div>
+
+  {%- comment -%} Desktop Navigation {%- endcomment -%}
+  <nav class="site-header__nav" aria-label="{{ 'accessibility.navigation' | t | default: 'Main navigation' }}">
+    <div class="site-header__nav-inner">
+      {%- for link in linklists[section.settings.menu].links -%}
+        <a href="{{ link.url }}" class="site-header__nav-link{% if link.active %} is-active{% endif %}" {% if link.current %}aria-current="page"{% endif %}>
+          {{ link.title }}
+        </a>
+      {%- endfor -%}
+    </div>
+  </nav>
+</header>
+
+{%- comment -%} Mobile Menu Drawer {%- endcomment -%}
+<div class="mobile-menu__overlay" data-mobile-menu-overlay aria-hidden="true"></div>
+<nav class="mobile-menu" data-mobile-menu aria-label="{{ 'accessibility.menu' | t | default: 'Mobile navigation' }}" aria-hidden="true">
+  <div class="mobile-menu__header">
+    <a href="/" class="site-header__logo" style="font-size: 24px;">
+      {%- if section.settings.logo -%}
+        <img src="{{ section.settings.logo | image_url: width: 150 }}" alt="{{ shop.name }}" loading="lazy" style="height: 28px; width: auto;">
+      {%- else -%}
+        {{ shop.name }}
+      {%- endif -%}
+    </a>
+    <button type="button" class="mobile-menu__close" data-mobile-menu-close aria-label="{{ 'accessibility.close' | t | default: 'Close' }}">
+      {% render 'icon', name: 'x' %}
+    </button>
+  </div>
+
+  <div class="mobile-menu__nav">
+    {%- for link in linklists[section.settings.menu].links -%}
+      <a href="{{ link.url }}" class="mobile-menu__link">{{ link.title }}</a>
+    {%- endfor -%}
+  </div>
+
+  <div class="mobile-menu__secondary">
+    <a href="{{ routes.account_url }}" class="mobile-menu__secondary-link">{{ 'customer.account' | t | default: 'Account' }}</a>
+    <a href="/pages/contact" class="mobile-menu__secondary-link">{{ 'general.contact' | t | default: 'Contact' }}</a>
+    <a href="/pages/faq" class="mobile-menu__secondary-link">{{ 'general.faq' | t | default: 'FAQ' }}</a>
+  </div>
+
+  <div style="margin-top: auto; padding-top: 24px; border-top: 1px solid var(--color-rose);">
+    {% render 'social-links' %}
+  </div>
+</nav>
+
+<style>
+  .site-header__left { display: flex; align-items: center; }
+  .site-header__center { display: flex; align-items: center; justify-content: center; }
+  .site-header__icon--desktop { display: none; }
+  @media (min-width: 640px) {
+    .site-header__icon--desktop { display: flex; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Header",
+  "tag": "section",
+  "class": "header-section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Main menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "select",
+      "id": "sticky_behavior",
+      "label": "Sticky behavior",
+      "options": [
+        { "value": "always", "label": "Always sticky" },
+        { "value": "scroll-up", "label": "Sticky on scroll up" },
+        { "value": "none", "label": "Not sticky" }
+      ],
+      "default": "always"
+    },
+    {
+      "type": "checkbox",
+      "id": "transparent_header",
+      "label": "Enable transparent header on homepage",
+      "default": false,
+      "info": "Header background becomes transparent over the hero section"
+    }
+  ]
+}
+{% endschema %}

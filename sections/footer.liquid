@@ -1,0 +1,97 @@
+{%- comment -%} Footer â€” Full site footer with 4-column grid {%- endcomment -%}
+
+<footer class="site-footer">
+  <div class="site-footer__grid">
+    {%- comment -%} Column 1: Brand {%- endcomment -%}
+    <div>
+      <a href="/" class="site-header__logo" style="font-size: 30px; color: var(--color-background); display: inline-block; margin-bottom: 4px;">
+        {%- if section.settings.logo -%}
+          <img src="{{ section.settings.logo | image_url: width: 200 }}" alt="{{ shop.name }}" loading="lazy" style="height: 32px; width: auto;">
+        {%- else -%}
+          {{ shop.name }}
+        {%- endif -%}
+      </a>
+      {%- if section.settings.tagline != blank -%}
+        <p class="site-footer__brand-description">{{ section.settings.tagline }}</p>
+      {%- endif -%}
+      <div style="margin-top: 24px;">
+        {% render 'social-links' %}
+      </div>
+    </div>
+
+    {%- comment -%} Navigation Columns {%- endcomment -%}
+    {%- for i in (1..3) -%}
+      {%- assign menu_setting = 'menu_' | append: i -%}
+      {%- assign title_setting = 'column_title_' | append: i -%}
+      {%- assign menu_handle = section.settings[menu_setting] -%}
+      {%- if menu_handle != blank -%}
+        <div>
+          <p class="site-footer__column-title">{{ section.settings[title_setting] | default: linklists[menu_handle].title }}</p>
+          <nav>
+            {%- for link in linklists[menu_handle].links -%}
+              <a href="{{ link.url }}" class="site-footer__link">{{ link.title }}</a>
+            {%- endfor -%}
+          </nav>
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+
+  {%- comment -%} Newsletter {%- endcomment -%}
+  {%- if section.settings.show_newsletter -%}
+    <div style="max-width: var(--page-max-width); margin: 48px auto 0; padding: 0 20px;">
+      {%- if section.settings.newsletter_heading != blank -%}
+        <p class="site-footer__column-title" style="margin-bottom: 16px;">{{ section.settings.newsletter_heading }}</p>
+      {%- endif -%}
+      <div style="max-width: 400px;">
+        {% render 'newsletter-form', inverted: true, placeholder_text: section.settings.newsletter_placeholder, button_text: 'Subscribe' %}
+      </div>
+    </div>
+  {%- endif -%}
+
+  {%- comment -%} Divider {%- endcomment -%}
+  <div style="max-width: var(--page-max-width); margin: 0 auto; padding: 0 20px;">
+    <hr class="site-footer__divider">
+  </div>
+
+  {%- comment -%} Bottom Bar {%- endcomment -%}
+  <div class="site-footer__bottom">
+    <p class="site-footer__copyright">
+      &copy; {{ 'now' | date: '%Y' }} {{ section.settings.copyright_text | default: shop.name }}. {{ 'general.all_rights_reserved' | t | default: 'All rights reserved.' }}
+    </p>
+    <div class="site-footer__payment-icons">
+      {%- for type in shop.enabled_payment_types -%}
+        {{ type | payment_type_svg_tag: class: 'site-footer__payment-icon' }}
+      {%- endfor -%}
+    </div>
+  </div>
+</footer>
+
+<style>
+  @media (min-width: 1024px) {
+    .site-footer__grid { padding: 0 40px; }
+    .site-footer__bottom { padding: 0 40px; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Footer",
+  "tag": "section",
+  "class": "footer-section",
+  "settings": [
+    { "type": "image_picker", "id": "logo", "label": "Logo image" },
+    { "type": "textarea", "id": "tagline", "label": "Brand tagline", "default": "Premium beauty essentials crafted for the modern woman. Ethically sourced, luxuriously formulated." },
+    { "type": "link_list", "id": "menu_1", "label": "Menu column 1", "default": "footer" },
+    { "type": "text", "id": "column_title_1", "label": "Column 1 title", "default": "Shop" },
+    { "type": "link_list", "id": "menu_2", "label": "Menu column 2" },
+    { "type": "text", "id": "column_title_2", "label": "Column 2 title", "default": "Help" },
+    { "type": "link_list", "id": "menu_3", "label": "Menu column 3" },
+    { "type": "text", "id": "column_title_3", "label": "Column 3 title", "default": "Legal" },
+    { "type": "checkbox", "id": "show_newsletter", "label": "Show newsletter", "default": true },
+    { "type": "text", "id": "newsletter_heading", "label": "Newsletter heading", "default": "Stay in the glow" },
+    { "type": "text", "id": "newsletter_placeholder", "label": "Newsletter placeholder", "default": "Enter your email" },
+    { "type": "text", "id": "copyright_text", "label": "Copyright text", "default": "IYMNN BEAUTY" }
+  ]
+}
+{% endschema %}

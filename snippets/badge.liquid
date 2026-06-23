@@ -1,0 +1,30 @@
+{%- comment -%}
+  Renders a product badge.
+  Usage: {% render 'badge', type: 'sale', text: 'Sale' %}
+  Accepts: type ('sale'|'new'|'soldout'|'bestseller'|'vegan'), text (string)
+{%- endcomment -%}
+
+{%- liquid
+  assign badge_class = 'badge'
+  case type
+    when 'sale'
+      assign badge_class = badge_class | append: ' badge--sale'
+      assign badge_text = text | default: 'Sale'
+    when 'new'
+      assign badge_class = badge_class | append: ' badge--new'
+      assign badge_text = text | default: 'New'
+    when 'soldout'
+      assign badge_class = badge_class | append: ' badge--soldout'
+      assign badge_text = text | default: 'Sold Out'
+    when 'bestseller'
+      assign badge_class = badge_class | append: ' badge--bestseller'
+      assign badge_text = text | default: 'Best Seller'
+    when 'vegan'
+      assign badge_class = badge_class | append: ' badge--vegan'
+      assign badge_text = text | default: 'Vegan'
+    else
+      assign badge_text = text | default: type
+  endcase
+-%}
+
+<span class="{{ badge_class }}">{{ badge_text }}</span>

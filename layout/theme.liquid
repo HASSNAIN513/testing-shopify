@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="{{ request.locale.iso_code }}" class="no-js">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <title>
+    {%- if page_title == blank -%}
+      {{ shop.name }}
+    {%- else -%}
+      {{ page_title }}
+      {%- if current_page != 1 %} — Page {{ current_page }}{% endif -%}
+      — {{ shop.name }}
+    {%- endif -%}
+  </title>
+
+  {%- if page_description -%}
+    <meta name="description" content="{{ page_description | escape }}">
+  {%- elsif settings.meta_description != blank -%}
+    <meta name="description" content="{{ settings.meta_description | escape }}">
+  {%- endif -%}
+
+  <link rel="canonical" href="{{ canonical_url }}">
+
+  {%- if settings.favicon -%}
+    <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
+  {%- endif -%}
+
+  {%- comment -%} Open Graph / Social Meta {%- endcomment -%}
+  <meta property="og:site_name" content="{{ shop.name }}">
+  <meta property="og:url" content="{{ canonical_url }}">
+  <meta property="og:title" content="{{ page_title | default: shop.name }}">
+  <meta property="og:type" content="website">
+  {%- if page_description -%}
+    <meta property="og:description" content="{{ page_description | escape }}">
+  {%- endif -%}
+  {%- if page_image -%}
+    <meta property="og:image" content="http:{{ page_image | image_url: width: 1200 }}">
+    <meta property="og:image:width" content="1200">
+  {%- elsif settings.og_image -%}
+    <meta property="og:image" content="http:{{ settings.og_image | image_url: width: 1200 }}">
+    <meta property="og:image:width" content="1200">
+  {%- endif -%}
+  <meta name="twitter:card" content="summary_large_image">
+
+  {%- comment -%} Google Fonts — Playfair Display, Cormorant Garamond, Inter, Montserrat {%- endcomment -%}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@300;400;500;600&family=Montserrat:wght@400;500;600&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  {%- comment -%} CSS Custom Properties from Theme Settings {%- endcomment -%}
+  <style>
+    :root {
+      /* Colors */
+      --color-primary: {{ settings.color_primary | default: '#C84B6A' }};
+      --color-primary-foreground: {{ settings.color_primary_foreground | default: '#FFFFFF' }};
+      --color-background: {{ settings.color_background | default: '#FFFFFF' }};
+      --color-foreground: {{ settings.color_foreground | default: '#1A1714' }};
+      --color-secondary: {{ settings.color_secondary | default: '#FAF5F3' }};
+      --color-muted: {{ settings.color_muted | default: '#F9F5F3' }};
+      --color-muted-foreground: {{ settings.color_muted_foreground | default: '#6B5E57' }};
+      --color-accent: {{ settings.color_accent | default: '#F5E8E6' }};
+      --color-blush: {{ settings.color_blush | default: '#FBF0ED' }};
+      --color-champagne: {{ settings.color_champagne | default: '#D8C8A0' }};
+      --color-ink: {{ settings.color_ink | default: '#1C1816' }};
+      --color-rose: {{ settings.color_rose | default: '#E8A8B0' }};
+      --color-border: {{ settings.color_border | default: '#EDE1DE' }};
+      --color-destructive: {{ settings.color_destructive | default: '#DC2626' }};
+      --color-sale-badge: {{ settings.color_sale_badge | default: '#C84B6A' }};
+      --color-sold-out-badge: {{ settings.color_sold_out_badge | default: '#6B5E57' }};
+
+      /* Typography */
+      --font-display: "Playfair Display", serif;
+      --font-serif-editorial: "Cormorant Garamond", serif;
+      --font-sans: "Inter", sans-serif;
+      --font-label: "Montserrat", sans-serif;
+      --font-size-base: {{ settings.type_body_size | default: 16 }}px;
+      --heading-text-transform: {{ settings.heading_text_transform | default: 'none' }};
+      --heading-letter-spacing: {{ settings.heading_letter_spacing | default: -2 | divided_by: 100.0 }}em;
+      --label-text-transform: {{ settings.label_text_transform | default: 'uppercase' }};
+      --label-letter-spacing: {{ settings.label_letter_spacing | default: 18 | divided_by: 100.0 }}em;
+
+      /* Buttons */
+      --button-border-radius: {{ settings.button_border_radius | default: 0 }}px;
+      --button-text-transform: {{ settings.button_text_transform | default: 'uppercase' }};
+      --button-padding-x: {{ settings.button_padding_horizontal | default: 32 }}px;
+      --button-padding-y: {{ settings.button_padding_vertical | default: 16 }}px;
+
+      /* Layout */
+      --page-max-width: {{ settings.page_max_width | default: 1440 }}px;
+      --section-padding: {{ settings.section_padding_vertical | default: 80 }}px;
+      --section-padding-desktop: {{ settings.section_padding_vertical_desktop | default: 112 }}px;
+      --grid-gap: {{ settings.grid_gap | default: 20 }}px;
+      --grid-gap-desktop: {{ settings.grid_gap_desktop | default: 28 }}px;
+
+      /* Product */
+      --swatch-size: {{ settings.swatch_size | default: 36 }}px;
+      --product-card-ratio: {{ settings.product_card_image_ratio | default: 125 }}%;
+    }
+  </style>
+
+  {{ 'theme.css' | asset_url | stylesheet_tag }}
+
+  {{ content_for_header }}
+
+  <script>
+    document.documentElement.classList.remove('no-js');
+    document.documentElement.classList.add('js');
+  </script>
+
+  <script src="{{ 'theme.js' | asset_url }}" defer></script>
+  <script src="{{ 'animations.js' | asset_url }}" defer></script>
+  <script src="{{ 'sticky-header.js' | asset_url }}" defer></script>
+  <script src="{{ 'mobile-menu.js' | asset_url }}" defer></script>
+  <script src="{{ 'cart-drawer.js' | asset_url }}" defer></script>
+  <script src="{{ 'quantity-input.js' | asset_url }}" defer></script>
+  <script src="{{ 'disclosure.js' | asset_url }}" defer></script>
+  <script src="{{ 'predictive-search.js' | asset_url }}" defer></script>
+
+  {%- if request.page_type == 'product' -%}
+    <script src="{{ 'product-form.js' | asset_url }}" defer></script>
+    <script src="{{ 'media-gallery.js' | asset_url }}" defer></script>
+    <script src="{{ 'product-swatches.js' | asset_url }}" defer></script>
+    <script src="{{ 'recently-viewed.js' | asset_url }}" defer></script>
+  {%- endif -%}
+
+  {%- if request.page_type == 'collection' -%}
+    <script src="{{ 'filters.js' | asset_url }}" defer></script>
+  {%- endif -%}
+</head>
+
+<body class="template-{{ template.name | handle }}{% if template.suffix %} template-{{ template.name }}-{{ template.suffix }}{% endif %}">
+
+  <a href="#main-content" class="skip-to-content visually-hidden">
+    Skip to content
+  </a>
+
+  {%- section 'announcement-bar' -%}
+  {%- section 'header' -%}
+
+  <main id="main-content" role="main" tabindex="-1">
+    {{ content_for_layout }}
+  </main>
+
+  {%- section 'footer' -%}
+
+  {%- comment -%} Cart Drawer {%- endcomment -%}
+  {%- section 'cart-drawer' -%}
+
+  {%- comment -%} Predictive Search Overlay {%- endcomment -%}
+  {%- section 'predictive-search' -%}
+
+  <script>
+    /* Cart state for AJAX operations */
+    window.IymnnBeauty = window.IymnnBeauty || {};
+    window.IymnnBeauty.routes = {
+      cart_url: '{{ routes.cart_url }}',
+      cart_add_url: '{{ routes.cart_add_url }}',
+      cart_change_url: '{{ routes.cart_change_url }}',
+      cart_update_url: '{{ routes.cart_update_url }}',
+      search_url: '{{ routes.search_url }}',
+      predictive_search_url: '{{ routes.predictive_search_url }}'
+    };
+    window.IymnnBeauty.moneyFormat = {{ shop.money_format | json }};
+  </script>
+
+</body>
+</html>

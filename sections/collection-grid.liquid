@@ -1,0 +1,127 @@
+{%- comment -%} Collection Grid — Filter bar + product grid + pagination {%- endcomment -%}
+
+{%- paginate collection.products by section.settings.products_per_page -%}
+<section style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+  <div class="page-width">
+    {%- comment -%} Filter Bar {%- endcomment -%}
+    <div class="filter-bar">
+      <div class="filter-bar__left">
+        {%- if section.settings.show_filters -%}
+          <button type="button" class="filter-bar__toggle" data-filter-toggle aria-expanded="false">
+            {% render 'icon', name: 'filter' %}
+            <span>{{ 'collections.filter' | t | default: 'Filter' }}</span>
+          </button>
+        {%- endif -%}
+        <span class="filter-bar__count">{{ collection.products_count }} {{ 'collections.products' | t | default: 'products' }}</span>
+      </div>
+      {%- if section.settings.show_sort -%}
+        <div class="filter-bar__sort">
+          <label for="sort-by">{{ 'collections.sort' | t | default: 'Sort by' }}:</label>
+          <select id="sort-by" data-sort-select>
+            {%- for option in collection.sort_options -%}
+              <option value="{{ option.value }}" {% if collection.sort_by == option.value %}selected{% endif %}>{{ option.name }}</option>
+            {%- endfor -%}
+          </select>
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} Active Filters {%- endcomment -%}
+    {%- if collection.filters.size > 0 -%}
+      {%- assign has_active = false -%}
+      {%- for filter in collection.filters -%}
+        {%- for value in filter.active_values -%}
+          {%- assign has_active = true -%}
+        {%- endfor -%}
+      {%- endfor -%}
+      {%- if has_active -%}
+        <div class="active-filters">
+          {%- for filter in collection.filters -%}
+            {%- for value in filter.active_values -%}
+              <span class="active-filter">
+                {{ value.label }}
+                <a href="{{ value.url_to_remove }}" class="active-filter__remove" aria-label="Remove filter: {{ value.label | escape }}">{% render 'icon', name: 'x' %}</a>
+              </span>
+            {%- endfor -%}
+          {%- endfor -%}
+          <a href="{{ collection.url }}" class="active-filter" style="border-color: var(--color-foreground);">{{ 'collections.clear_filters' | t | default: 'Clear all' }}</a>
+        </div>
+      {%- endif -%}
+    {%- endif -%}
+
+    <div class="collection-grid__layout" style="display: flex; gap: 32px;">
+      {%- comment -%} Sidebar Filters (Desktop) {%- endcomment -%}
+      {%- if section.settings.show_filters -%}
+        <aside class="collection-grid__filters" data-filter-sidebar style="display: none;">
+          {%- for filter in collection.filters -%}
+            <div class="accordion__item" data-accordion-item>
+              <button type="button" class="accordion__trigger" data-accordion-trigger style="font-size: 14px;">
+                <span>{{ filter.label }}</span>
+                <span class="accordion__trigger-icon">{% render 'icon', name: 'chevron-down' %}</span>
+              </button>
+              <div class="accordion__content">
+                <div class="accordion__body">
+                  {%- case filter.type -%}
+                    {%- when 'list' -%}
+                      {%- for value in filter.values -%}
+                        <label style="display: flex; align-items: center; gap: 8px; padding: 6px 0; cursor: pointer; font-size: 14px;">
+                          <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} data-filter-input style="accent-color: var(--color-primary);">
+                          {{ value.label }} <span style="color: var(--color-muted-foreground); font-size: 12px;">({{ value.count }})</span>
+                        </label>
+                      {%- endfor -%}
+                    {%- when 'price_range' -%}
+                      <div style="display: flex; gap: 12px; align-items: center; padding: 8px 0;">
+                        <input type="number" name="{{ filter.min_value.param_name }}" value="{{ filter.min_value.value | money_without_currency }}" placeholder="{{ filter.min_value.value | money_without_currency }}" class="form-input" style="width: 80px; padding: 8px;" data-filter-input>
+                        <span>—</span>
+                        <input type="number" name="{{ filter.max_value.param_name }}" value="{{ filter.max_value.value | money_without_currency }}" placeholder="{{ filter.max_value.value | money_without_currency }}" class="form-input" style="width: 80px; padding: 8px;" data-filter-input>
+                      </div>
+                  {%- endcase -%}
+                </div>
+              </div>
+            </div>
+          {%- endfor -%}
+        </aside>
+      {%- endif -%}
+
+      {%- comment -%} Product Grid {%- endcomment -%}
+      <div class="collection-grid__products" style="flex: 1;" data-collection-products>
+        {%- if collection.products.size > 0 -%}
+          <div class="product-grid" data-reveal-stagger>
+            {%- for product in collection.products -%}
+              {% render 'product-card', product: product, show_quick_add: true, show_swatches: true, lazy: true %}
+            {%- endfor -%}
+          </div>
+          {% render 'pagination', paginate: paginate %}
+        {%- else -%}
+          <div style="text-align: center; padding: 80px 20px;">
+            <p class="heading-sm" style="margin-bottom: 12px;">{{ 'collections.no_products' | t | default: 'No products found' }}</p>
+            <p class="text-muted">{{ 'collections.try_clearing' | t | default: 'Try clearing filters or browse our collections.' }}</p>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+{%- endpaginate -%}
+
+<style>
+  @media (min-width: 1024px) {
+    .collection-grid__filters { display: block !important; width: 240px; flex-shrink: 0; position: sticky; top: 120px; align-self: start; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Collection Grid",
+  "tag": "section",
+  "class": "collection-grid-section",
+  "settings": [
+    { "type": "range", "id": "products_per_page", "label": "Products per page", "min": 4, "max": 24, "step": 4, "default": 12 },
+    { "type": "checkbox", "id": "show_filters", "label": "Show filters", "default": true },
+    { "type": "checkbox", "id": "show_sort", "label": "Show sort", "default": true },
+    { "type": "range", "id": "padding_top", "label": "Padding top", "min": 0, "max": 150, "step": 4, "unit": "px", "default": 40 },
+    { "type": "range", "id": "padding_bottom", "label": "Padding bottom", "min": 0, "max": 150, "step": 4, "unit": "px", "default": 80 }
+  ],
+  "presets": [{ "name": "Collection Grid" }]
+}
+{% endschema %}

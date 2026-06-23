@@ -1,0 +1,142 @@
+{%- comment -%}
+  Renders the standard product card used in grids and carousels.
+  Usage: {% render 'product-card', product: product, show_quick_add: true %}
+  Accepts: product, show_quick_add, show_swatches, show_badge, show_vendor, lazy
+{%- endcomment -%}
+
+{%- liquid
+  assign show_quick_add = show_quick_add | default: settings.enable_quick_add
+  assign show_swatches = show_swatches | default: true
+  assign show_badge = show_badge | default: true
+  assign show_vendor = show_vendor | default: settings.show_vendor
+  assign lazy_load = lazy | default: true
+  assign on_sale = false
+  if product.compare_at_price > product.price
+    assign on_sale = true
+  endif
+  assign is_sold_out = false
+  unless product.available
+    assign is_sold_out = true
+  endunless
+  assign swatch_option_name = settings.swatch_option_name | default: 'Color'
+-%}
+
+<div class="product-card" data-product-card>
+  <div class="product-card__image-wrap">
+    {%- comment -%} Primary Image {%- endcomment -%}
+    {%- if product.featured_image -%}
+      <img
+        src="{{ product.featured_image | image_url: width: 600 }}"
+        srcset="
+          {{ product.featured_image | image_url: width: 300 }} 300w,
+          {{ product.featured_image | image_url: width: 450 }} 450w,
+          {{ product.featured_image | image_url: width: 600 }} 600w,
+          {{ product.featured_image | image_url: width: 800 }} 800w
+        "
+        sizes="(min-width: 1024px) 25vw, 50vw"
+        alt="{{ product.featured_image.alt | default: product.title | escape }}"
+        loading="{% if lazy_load %}lazy{% else %}eager{% endif %}"
+        width="{{ product.featured_image.width }}"
+        height="{{ product.featured_image.height }}"
+        class="product-card__image"
+      >
+    {%- endif -%}
+
+    {%- comment -%} Secondary Image on Hover {%- endcomment -%}
+    {%- if product.images.size > 1 -%}
+      <img
+        src="{{ product.images[1] | image_url: width: 600 }}"
+        alt="{{ product.images[1].alt | default: product.title | escape }}"
+        loading="lazy"
+        width="{{ product.images[1].width }}"
+        height="{{ product.images[1].height }}"
+        class="product-card__image product-card__image--secondary"
+      >
+    {%- endif -%}
+
+    {%- comment -%} Badges {%- endcomment -%}
+    {%- if show_badge -%}
+      <div class="product-card__badges">
+        {%- if is_sold_out -%}
+          {% render 'badge', type: 'soldout' %}
+        {%- elsif on_sale -%}
+          {% render 'badge', type: 'sale' %}
+        {%- endif -%}
+        {%- if product.tags contains 'new' -%}
+          {% render 'badge', type: 'new' %}
+        {%- endif -%}
+        {%- if product.tags contains 'bestseller' -%}
+          {% render 'badge', type: 'bestseller' %}
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} Wishlist Button {%- endcomment -%}
+    <button type="button" class="product-card__wishlist" aria-label="{{ 'products.add_to_wishlist' | t | default: 'Add to wishlist' }}">
+      {% render 'icon', name: 'heart' %}
+    </button>
+
+    {%- comment -%} Quick Add Button {%- endcomment -%}
+    {%- if show_quick_add and product.available -%}
+      <button
+        type="button"
+        class="product-card__quick-add"
+        data-quick-add
+        data-product-id="{{ product.id }}"
+        data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+        aria-label="{{ 'products.quick_add' | t | default: 'Quick add' }} {{ product.title | escape }}"
+      >
+        {% render 'icon', name: 'plus' %}
+        <span>{{ 'products.quick_add' | t | default: 'Quick Add' }}</span>
+      </button>
+    {%- endif -%}
+  </div>
+
+  <div class="product-card__info">
+    {%- comment -%} Vendor / Collection Tag {%- endcomment -%}
+    {%- if show_vendor and product.vendor != blank -%}
+      <div class="product-card__tag">{{ product.vendor }}</div>
+    {%- elsif product.type != blank -%}
+      <div class="product-card__tag">{{ product.type }}</div>
+    {%- endif -%}
+
+    {%- comment -%} Product Name {%- endcomment -%}
+    <h3 class="product-card__name">
+      <a href="{{ product.url }}">{{ product.title }}</a>
+    </h3>
+
+    {%- comment -%} Price {%- endcomment -%}
+    <div class="product-card__price">
+      {%- if on_sale -%}
+        <span class="product-card__price--sale">{{ product.price | money }}</span>
+        <span class="product-card__price--compare">{{ product.compare_at_price | money }}</span>
+      {%- else -%}
+        <span>{{ product.price | money }}</span>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} Color Swatches {%- endcomment -%}
+    {%- if show_swatches -%}
+      {%- for option in product.options_with_values -%}
+        {%- if option.name == swatch_option_name -%}
+          <div class="product-card__swatches">
+            {%- assign swatch_limit = 5 -%}
+            {%- for value in option.values limit: swatch_limit -%}
+              {%- assign color_handle = value | handleize -%}
+              <span
+                class="product-card__swatch"
+                style="background-color: {{ value | downcase | replace: ' ', '' }};"
+                title="{{ value }}"
+                aria-label="{{ swatch_option_name }}: {{ value }}"
+              ></span>
+            {%- endfor -%}
+            {%- assign remaining = option.values.size | minus: swatch_limit -%}
+            {%- if remaining > 0 -%}
+              <span class="product-card__swatch-more">+{{ remaining }}</span>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endif -%}
+  </div>
+</div>

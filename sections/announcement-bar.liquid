@@ -1,0 +1,70 @@
+{%- comment -%} Announcement Bar â€” Scrolling marquee banner {%- endcomment -%}
+
+{%- if section.settings.show_bar -%}
+<div class="announcement-bar" data-announcement-bar style="background-color: {{ section.settings.bg_color }}; color: {{ section.settings.text_color }};" role="region" aria-label="{{ 'general.announcement' | t | default: 'Announcement' }}">
+  <div class="announcement-bar__track" aria-hidden="true" style="animation-duration: {{ section.settings.speed }}s;">
+    {%- comment -%} Quadruple content for seamless loop {%- endcomment -%}
+    {%- for i in (1..4) -%}
+      {%- for block in section.blocks -%}
+        <div class="announcement-bar__item" {{ block.shopify_attributes }}>
+          <span>{{ block.settings.text }}</span>
+          <span class="announcement-bar__divider" aria-hidden="true">âœ¦</span>
+        </div>
+      {%- endfor -%}
+    {%- endfor -%}
+  </div>
+</div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Announcement Bar",
+  "tag": "section",
+  "class": "announcement-bar-section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_bar",
+      "label": "Show announcement bar",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "Scroll speed (seconds)",
+      "min": 10,
+      "max": 60,
+      "step": 2,
+      "unit": "s",
+      "default": 32
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#C84B6A"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#FFFFFF"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "announcement",
+      "name": "Announcement",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Free shipping on orders over $75"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 8
+}
+{% endschema %}

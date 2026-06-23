@@ -1,0 +1,77 @@
+{%- comment -%} Article Content — Full article page {%- endcomment -%}
+
+<article class="article" itemscope itemtype="http://schema.org/BlogPosting">
+  {%- if section.settings.show_hero_image and article.image -%}
+    <img src="{{ article.image | image_url: width: 1200 }}" srcset="{{ article.image | image_url: width: 600 }} 600w, {{ article.image | image_url: width: 900 }} 900w, {{ article.image | image_url: width: 1200 }} 1200w" sizes="(min-width: 768px) 720px, 100vw" alt="{{ article.title | escape }}" loading="eager" class="article__hero-image" itemprop="image">
+  {%- endif -%}
+
+  {% render 'breadcrumb' %}
+  <h1 class="article__title" itemprop="headline">{{ article.title }}</h1>
+
+  {%- if section.settings.show_date or section.settings.show_author -%}
+    <p class="article__meta">
+      {%- if section.settings.show_author -%}<span itemprop="author">{{ article.author }}</span>{%- endif -%}
+      {%- if section.settings.show_date and section.settings.show_author -%} · {%- endif -%}
+      {%- if section.settings.show_date -%}<time datetime="{{ article.published_at | date: '%Y-%m-%d' }}" itemprop="datePublished">{{ article.published_at | date: '%B %d, %Y' }}</time>{%- endif -%}
+    </p>
+  {%- endif -%}
+
+  <div class="article__content" itemprop="articleBody">
+    {{ article.content }}
+  </div>
+
+  {%- if section.settings.show_share -%}
+    <div style="margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--color-border); display: flex; align-items: center; gap: 12px;">
+      <span class="font-label" style="font-size: 11px;">{{ 'general.share' | t | default: 'Share' }}:</span>
+      <a href="https://www.facebook.com/sharer.php?u={{ shop.url }}{{ article.url }}" target="_blank" rel="noopener noreferrer" aria-label="Share on Facebook" class="btn-icon" style="width: 36px; height: 36px; border: 1px solid var(--color-border);">{% render 'icon', name: 'facebook' %}</a>
+      <a href="https://twitter.com/intent/tweet?url={{ shop.url }}{{ article.url }}&text={{ article.title | url_encode }}" target="_blank" rel="noopener noreferrer" aria-label="Share on Twitter" class="btn-icon" style="width: 36px; height: 36px; border: 1px solid var(--color-border);">{% render 'icon', name: 'twitter' %}</a>
+      <a href="https://pinterest.com/pin/create/button/?url={{ shop.url }}{{ article.url }}&media={{ article.image | image_url: width: 800 }}&description={{ article.title | url_encode }}" target="_blank" rel="noopener noreferrer" aria-label="Share on Pinterest" class="btn-icon" style="width: 36px; height: 36px; border: 1px solid var(--color-border);">{% render 'icon', name: 'pinterest' %}</a>
+    </div>
+  {%- endif -%}
+
+  {%- if blog.comments_enabled? -%}
+    <div style="margin-top: 60px; padding-top: 40px; border-top: 1px solid var(--color-border);">
+      <h2 class="heading-sm" style="margin-bottom: 24px;">{{ 'blogs.comments' | t | default: 'Comments' }} ({{ article.comments_count }})</h2>
+      {%- for comment in article.comments -%}
+        <div style="padding: 16px 0; border-bottom: 1px solid var(--color-border);">
+          <p class="font-label" style="font-size: 11px; margin-bottom: 4px;">{{ comment.author }}</p>
+          <p style="font-size: 12px; color: var(--color-muted-foreground); margin-bottom: 8px;">{{ comment.created_at | date: '%B %d, %Y' }}</p>
+          <p style="line-height: 1.625;">{{ comment.content }}</p>
+        </div>
+      {%- endfor -%}
+      {% form 'new_comment', article %}
+        <div style="margin-top: 32px;">
+          <h3 class="heading-xs" style="margin-bottom: 16px;">{{ 'blogs.leave_comment' | t | default: 'Leave a comment' }}</h3>
+          <div class="form-group">
+            <label class="form-label" for="comment-author">{{ 'blogs.name' | t | default: 'Name' }}</label>
+            <input type="text" id="comment-author" name="comment[author]" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="comment-email">{{ 'blogs.email' | t | default: 'Email' }}</label>
+            <input type="email" id="comment-email" name="comment[email]" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="comment-body">{{ 'blogs.message' | t | default: 'Message' }}</label>
+            <textarea id="comment-body" name="comment[body]" class="form-textarea" required></textarea>
+          </div>
+          <button type="submit" class="btn btn--primary">{{ 'blogs.post_comment' | t | default: 'Post Comment' }}</button>
+        </div>
+      {% endform %}
+    </div>
+  {%- endif -%}
+</article>
+
+{% schema %}
+{
+  "name": "Article Content",
+  "tag": "section",
+  "class": "article-section",
+  "settings": [
+    { "type": "checkbox", "id": "show_hero_image", "label": "Show hero image", "default": true },
+    { "type": "checkbox", "id": "show_author", "label": "Show author", "default": true },
+    { "type": "checkbox", "id": "show_date", "label": "Show date", "default": true },
+    { "type": "checkbox", "id": "show_share", "label": "Show share buttons", "default": true }
+  ],
+  "presets": [{ "name": "Article Content" }]
+}
+{% endschema %}

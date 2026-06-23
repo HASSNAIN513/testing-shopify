@@ -1,0 +1,42 @@
+{%- comment -%}
+  Renders a mini product card for cart upsells and recommendations.
+  Usage: {% render 'product-card-mini', product: product %}
+{%- endcomment -%}
+
+<div class="product-card-mini" data-product-card-mini>
+  <a href="{{ product.url }}" class="product-card-mini__link">
+    {%- if product.featured_image -%}
+      <img
+        src="{{ product.featured_image | image_url: width: 120 }}"
+        alt="{{ product.featured_image.alt | default: product.title | escape }}"
+        loading="lazy"
+        width="60"
+        height="75"
+        class="product-card-mini__image"
+        style="aspect-ratio: 4/5; object-fit: cover;"
+      >
+    {%- endif -%}
+    <div class="product-card-mini__info">
+      <p class="product-card-mini__name" style="font-family: var(--font-display); font-size: 14px; margin-bottom: 4px;">{{ product.title }}</p>
+      <p class="product-card-mini__price" style="font-size: 13px; color: var(--color-muted-foreground);">{{ product.price | money }}</p>
+    </div>
+  </a>
+  {%- if product.available -%}
+    <button
+      type="button"
+      class="btn btn--outline"
+      style="padding: 8px 16px; font-size: 10px;"
+      data-quick-add
+      data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+      aria-label="{{ 'products.add_to_cart' | t | default: 'Add to cart' }}: {{ product.title | escape }}"
+    >
+      {% render 'icon', name: 'plus' %}
+    </button>
+  {%- endif -%}
+</div>
+
+<style>
+  .product-card-mini { display: flex; align-items: center; gap: 12px; padding: 12px 0; }
+  .product-card-mini__link { display: flex; align-items: center; gap: 12px; flex: 1; text-decoration: none; color: inherit; }
+  .product-card-mini__image { width: 60px; height: 75px; flex-shrink: 0; }
+</style>

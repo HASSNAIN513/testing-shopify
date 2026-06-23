@@ -1,0 +1,61 @@
+{%- comment -%} Best Sellers Section {%- endcomment -%}
+
+<section style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+  <div class="page-width">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="eyebrow" style="text-align:center;">{{ section.settings.eyebrow }}</p>
+    {%- endif -%}
+    <h2 class="heading-lg" style="text-align:center;margin-bottom:40px;">
+      {{ section.settings.heading }}
+      {%- if section.settings.heading_accent != blank -%}
+        <em class="heading-accent">{{ section.settings.heading_accent }}</em>
+      {%- endif -%}
+    </h2>
+
+    {%- assign collection = collections[section.settings.collection] -%}
+    {%- if collection != blank -%}
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:var(--grid-gap);">
+        {%- for product in collection.products limit: section.settings.products_to_show -%}
+          <div class="product-card">
+            <a href="{{ product.url }}">
+              {%- if product.featured_image -%}
+                <img src="{{ product.featured_image | image_url: width: 600 }}" alt="{{ product.title | escape }}" loading="lazy" style="width:100%;aspect-ratio:4/5;object-fit:cover;">
+              {%- endif -%}
+            </a>
+            <div style="padding:12px 0;">
+              <p style="font-family:var(--font-display);font-size:16px;">
+                <a href="{{ product.url }}" style="color:inherit;text-decoration:none;">{{ product.title }}</a>
+              </p>
+              <p style="font-family:var(--font-display);font-size:14px;color:var(--color-primary);margin-top:4px;">{{ product.price | money }}</p>
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- else -%}
+      <p style="text-align:center;color:var(--color-muted-foreground);">Select a collection in the theme editor to display products.</p>
+    {%- endif -%}
+  </div>
+</section>
+
+<style>
+  @media (min-width: 1024px) {
+    .page-width .product-card { }
+    section > .page-width > div[style*="grid"] { grid-template-columns: repeat(4, 1fr) !important; gap: var(--grid-gap-desktop); }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Best Sellers",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Curated For You" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Best Sellers" },
+    { "type": "text", "id": "heading_accent", "label": "Heading accent", "default": "" },
+    { "type": "collection", "id": "collection", "label": "Collection" },
+    { "type": "range", "id": "products_to_show", "label": "Products to show", "min": 4, "max": 12, "step": 1, "default": 8 },
+    { "type": "range", "id": "padding_top", "label": "Padding top", "min": 0, "max": 150, "step": 4, "unit": "px", "default": 80 },
+    { "type": "range", "id": "padding_bottom", "label": "Padding bottom", "min": 0, "max": 150, "step": 4, "unit": "px", "default": 80 }
+  ]
+}
+{% endschema %}

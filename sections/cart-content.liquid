@@ -1,0 +1,80 @@
+{%- comment -%} Cart Content — Full cart page fallback {%- endcomment -%}
+
+<section style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+  <div class="page-width">
+    <h1 class="heading-lg" style="margin-bottom: 40px;">{{ section.settings.heading | default: 'Your Cart' }}</h1>
+
+    {%- if cart.item_count > 0 -%}
+      <form action="{{ routes.cart_url }}" method="post">
+        <table class="order-table" style="width: 100%;">
+          <thead>
+            <tr>
+              <th>{{ 'cart.product' | t | default: 'Product' }}</th>
+              <th></th>
+              <th>{{ 'cart.price' | t | default: 'Price' }}</th>
+              <th>{{ 'cart.quantity' | t | default: 'Quantity' }}</th>
+              <th style="text-align: right;">{{ 'cart.total' | t | default: 'Total' }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {%- for item in cart.items -%}
+              <tr>
+                <td style="width: 80px;">
+                  {%- if item.image -%}
+                    <a href="{{ item.url }}">
+                      <img src="{{ item.image | image_url: width: 160 }}" alt="{{ item.title | escape }}" loading="lazy" style="width: 80px; aspect-ratio: 4/5; object-fit: cover;">
+                    </a>
+                  {%- endif -%}
+                </td>
+                <td>
+                  <a href="{{ item.url }}" class="product-card__name" style="font-size: 16px;">{{ item.product.title }}</a>
+                  {%- unless item.product.has_only_default_variant -%}
+                    <p style="font-size: 13px; color: var(--color-muted-foreground);">{{ item.variant.title }}</p>
+                  {%- endunless -%}
+                </td>
+                <td>{{ item.original_price | money }}</td>
+                <td>
+                  {% render 'quantity-input', value: item.quantity, min: 0, max: 99, line_item_key: item.key, id_prefix: item.key %}
+                </td>
+                <td style="text-align: right; font-family: var(--font-display);">{{ item.final_line_price | money }}</td>
+              </tr>
+            {%- endfor -%}
+          </tbody>
+        </table>
+
+        <div style="display: flex; justify-content: flex-end; margin-top: 40px;">
+          <div style="width: 100%; max-width: 400px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+              <span class="font-label" style="font-size: 11px;">{{ 'cart.subtotal' | t | default: 'Subtotal' }}</span>
+              <span style="font-family: var(--font-display); font-size: 20px;">{{ cart.total_price | money }}</span>
+            </div>
+            <p style="font-size: 12px; color: var(--color-muted-foreground); text-align: right; margin-bottom: 16px;">{{ 'cart.taxes_note' | t | default: 'Taxes and shipping calculated at checkout' }}</p>
+            <button type="submit" name="checkout" class="btn btn--primary btn--full">{{ 'cart.checkout' | t | default: 'Checkout' }}</button>
+            <a href="/collections/all" class="btn btn--outline btn--full" style="margin-top: 8px;">{{ 'cart.continue_shopping' | t | default: 'Continue Shopping' }}</a>
+          </div>
+        </div>
+      </form>
+    {%- else -%}
+      <div style="text-align: center; padding: 60px 20px;">
+        <span style="display: block; margin-bottom: 16px; color: var(--color-muted-foreground);">{% render 'icon', name: 'shopping-bag' %}</span>
+        <p class="heading-sm" style="margin-bottom: 8px;">{{ 'cart.empty' | t | default: 'Your cart is empty' }}</p>
+        <p class="text-muted" style="margin-bottom: 24px;">{{ 'cart.empty_text' | t | default: 'Add your favourite items to get started.' }}</p>
+        {% render 'button', label: 'Continue Shopping', url: '/collections/all', style: 'primary', icon: 'arrow' %}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Cart Content",
+  "tag": "section",
+  "class": "cart-content-section",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Your Cart" },
+    { "type": "range", "id": "padding_top", "label": "Padding top", "min": 0, "max": 150, "step": 4, "unit": "px", "default": 60 },
+    { "type": "range", "id": "padding_bottom", "label": "Padding bottom", "min": 0, "max": 150, "step": 4, "unit": "px", "default": 80 }
+  ],
+  "presets": [{ "name": "Cart Content" }]
+}
+{% endschema %}

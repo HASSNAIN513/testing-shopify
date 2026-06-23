@@ -1,0 +1,20 @@
+{
+  "sections": {
+    "product-hero": { "type": "product-hero", "settings": {} },
+    "product-storytelling": { "type": "product-storytelling", "settings": {} },
+    "product-tabs": { "type": "product-tabs", "settings": {} },
+    "product-reviews": { "type": "product-reviews", "settings": {} },
+    "complementary-products": { "type": "complementary-products", "settings": {} },
+    "recently-viewed": { "type": "recently-viewed", "settings": {} },
+    "related-products": { "type": "related-products", "settings": {} }
+  },
+  "order": [
+    "product-hero",
+    "product-storytelling",
+    "product-tabs",
+    "product-reviews",
+    "complementary-products",
+    "recently-viewed",
+    "related-products"
+  ]
+}

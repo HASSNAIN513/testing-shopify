@@ -1,0 +1,28 @@
+{%- comment -%} Predictive Search â€” AJAX search overlay {%- endcomment -%}
+
+<div class="predictive-search" data-predictive-search aria-hidden="true">
+  <div class="predictive-search__inner">
+    <div class="predictive-search__input-wrap">
+      <span>{% render 'icon', name: 'search' %}</span>
+      <input type="search" class="predictive-search__input" data-predictive-input placeholder="{{ section.settings.placeholder_text | default: 'Search products...' }}" aria-label="{{ 'general.search' | t | default: 'Search' }}" autocomplete="off">
+      <button type="button" class="predictive-search__close" data-predictive-close aria-label="{{ 'accessibility.close' | t | default: 'Close' }}">
+        {% render 'icon', name: 'x' %}
+      </button>
+    </div>
+    <div class="predictive-search__results" data-predictive-results></div>
+    <div class="predictive-search__loading" data-predictive-loading style="display: none; text-align: center; padding: 20px;">
+      {% render 'loading-spinner' %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Predictive Search",
+  "tag": "section",
+  "class": "predictive-search-section",
+  "settings": [
+    { "type": "text", "id": "placeholder_text", "label": "Placeholder text", "default": "Search products, collections..." }
+  ]
+}
+{% endschema %}

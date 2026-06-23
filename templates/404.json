@@ -1,0 +1,6 @@
+{
+  "sections": {
+    "four-oh-four": { "type": "four-oh-four", "settings": {} }
+  },
+  "order": ["four-oh-four"]
+}

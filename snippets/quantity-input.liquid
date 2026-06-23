@@ -1,0 +1,46 @@
+{%- comment -%}
+  Renders a quantity input stepper.
+  Usage: {% render 'quantity-input', value: 1, min: 1, max: 10 %}
+  Accepts: value, min, max, line_item_key, id_prefix
+{%- endcomment -%}
+
+{%- liquid
+  assign qty_value = value | default: 1
+  assign qty_min = min | default: 1
+  assign qty_max = max | default: 99
+  assign input_id = id_prefix | default: 'quantity'
+-%}
+
+<div class="quantity-input" data-quantity-input {% if line_item_key %}data-line-item-key="{{ line_item_key }}"{% endif %}>
+  <button
+    type="button"
+    class="quantity-input__button"
+    data-quantity-minus
+    aria-label="{{ 'products.quantity' | t | default: 'Quantity' }}: {{ 'general.decrease' | t | default: 'Decrease' }}"
+    {% if qty_value <= qty_min %}disabled{% endif %}
+  >
+    {% render 'icon', name: 'minus' %}
+  </button>
+
+  <input
+    type="number"
+    class="quantity-input__field"
+    id="{{ input_id }}"
+    name="quantity"
+    value="{{ qty_value }}"
+    min="{{ qty_min }}"
+    max="{{ qty_max }}"
+    data-quantity-field
+    aria-label="{{ 'products.quantity' | t | default: 'Quantity' }}"
+  >
+
+  <button
+    type="button"
+    class="quantity-input__button"
+    data-quantity-plus
+    aria-label="{{ 'products.quantity' | t | default: 'Quantity' }}: {{ 'general.increase' | t | default: 'Increase' }}"
+    {% if qty_value >= qty_max %}disabled{% endif %}
+  >
+    {% render 'icon', name: 'plus' %}
+  </button>
+</div>

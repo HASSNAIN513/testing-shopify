@@ -1,0 +1,30 @@
+{%- comment -%} Related Products — Recommendation grid {%- endcomment -%}
+
+<section style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px; border-top: 1px solid var(--color-border);" data-reveal>
+  <div class="page-width">
+    <h2 class="heading-md" style="margin-bottom: 40px;">{{ section.settings.heading }}</h2>
+    <div class="product-grid" data-reveal-stagger data-related-products data-product-id="{{ product.id }}" data-limit="{{ section.settings.products_to_show }}">
+      {%- assign related = product.collections.first.products -%}
+      {%- for item in related limit: section.settings.products_to_show -%}
+        {%- unless item.id == product.id -%}
+          {% render 'product-card', product: item, lazy: true %}
+        {%- endunless -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Related Products",
+  "tag": "section",
+  "class": "related-products-section",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "You May Also Like" },
+    { "type": "range", "id": "products_to_show", "label": "Products to show", "min": 2, "max": 8, "step": 1, "default": 4 },
+    { "type": "range", "id": "padding_top", "label": "Padding top", "min": 0, "max": 150, "step": 4, "unit": "px", "default": 80 },
+    { "type": "range", "id": "padding_bottom", "label": "Padding bottom", "min": 0, "max": 150, "step": 4, "unit": "px", "default": 80 }
+  ],
+  "presets": [{ "name": "Related Products" }]
+}
+{% endschema %}
